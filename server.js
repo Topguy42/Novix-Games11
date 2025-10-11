@@ -17,10 +17,13 @@ import { signupHandler } from "./server/api/signup.js";
 import { signinHandler } from "./server/api/signin.js";
 import cors from "cors";
 import fetch from "node-fetch";
-import fs from 'fs';
+import fs from "fs";
 import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
+import { execSync } from "child_process";
+import NodeCache from "node-cache";
 
+const cache = new NodeCache({ stdTTL: 86400 });
 dotenv.config();
 const envFile = `.env.${process.env.NODE_ENV || "production"}`;
 if (fs.existsSync(envFile)) {
@@ -54,29 +57,10 @@ app.use(
 );
 app.use(cookieParser());
 
-app.use(express.static(publicPath));
-app.use(express.static("public"));
-app.use("/scram/", express.static(scramjetPath));
-app.use("/libcurl/", express.static(libcurlPath));
-// Also serve common scramjet asset names at the site root for legacy references
-// (this avoids copying files into the repo root and keeps a single source)
-app.get("/scramjet.all.js", (req, res) => {
-  return res.sendFile(path.join(scramjetPath, "scramjet.all.js"));
-});
-app.get("/scramjet.sync.js", (req, res) => {
-  return res.sendFile(path.join(scramjetPath, "scramjet.sync.js"));
-});
-app.get("/scramjet.wasm.wasm", (req, res) => {
-  return res.sendFile(path.join(scramjetPath, "scramjet.wasm.wasm"));
-});
-app.get("/scramjet.all.js.map", (req, res) => {
-  return res.sendFile(path.join(scramjetPath, "scramjet.all.js.map"));
-});
-app.use("/baremux/", express.static(baremuxPath));
-app.use("/epoxy/", express.static(epoxyPath));
-
 const verifyMiddleware = (req, res, next) => {
-  const verified = req.cookies?.verified === "ok" || req.headers["x-bot-token"] === process.env.BOT_TOKEN;
+  const verified =
+    req.cookies?.verified === "ok" ||
+    req.headers["x-bot-token"] === process.env.BOT_TOKEN;
   const ua = req.headers["user-agent"] || "";
   const isBrowser = /Mozilla|Chrome|Safari|Firefox|Edge/i.test(ua);
   const acceptsHtml = req.headers.accept?.includes("text/html");
@@ -85,7 +69,11 @@ const verifyMiddleware = (req, res, next) => {
   if (verified && isBrowser) return next();
   if (!acceptsHtml) return next();
 
-  res.cookie("verified", "ok", { maxAge: 86400000, httpOnly: true, sameSite: "Lax" });
+  res.cookie("verified", "ok", {
+    maxAge: 86400000,
+    httpOnly: true,
+    sameSite: "Lax",
+  });
   res.status(200).send(`
     <!DOCTYPE html>
     <html><body>
@@ -105,21 +93,37 @@ const apiLimiter = rateLimit({
   max: 100,
   standardHeaders: true,
   legacyHeaders: false,
-  message: "Too many requests from this IP, slow down"
+  message: "Too many requests from this IP, slow down",
 });
 
 app.use("/bare/", apiLimiter);
 app.use("/api/", apiLimiter);
 
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'DELETE'],
-  allowedHeaders: ['Content-Type']
-}));
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "DELETE"],
+    allowedHeaders: ["Content-Type"],
+  }),
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload());
-app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false, cookie: { secure: false } }));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false },
+  }),
+);
+app.use((req, res, next) => {
+  res.set({
+    'Cross-Origin-Opener-Policy': 'same-origin',
+    'Cross-Origin-Embedder-Policy': 'require-corp'
+  });
+  next();
+});
 
 app.get("/results/:query", async (req, res) => {
   try {
@@ -331,10 +335,6 @@ app.post("/api/link-account", async (req, res) => {
   }
 });
 
-app.use((req, res) => {
-  return res.status(404).sendFile(join(__dirname, publicPath, "404.html"));
-});
-
 const server = createServer((req, res) => {
   if (bare.shouldRoute(req)) {
     bare.routeRequest(req, res);
@@ -352,9 +352,98 @@ server.on("upgrade", (req, socket, head) => {
     socket.end();
   }
 });
+const IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"];
+const VIDEO_EXTENSIONS = [".mp4", ".webm", ".mov"];
+
+// Load cache at startup
+const urls = JSON.parse(fs.readFileSync(".sitemap-cache.json", "utf8"));
+cache.set("urls", urls);
+
+// --- Priority & changefreq ---
+function computePriority(commitCount, maxCommits) {
+  if (maxCommits === 0) return 0.5;
+  const normalized = commitCount / maxCommits;
+  return Math.max(0.1, Math.min(1.0, normalized));
+}
+function computeChangefreq(lastmod) {
+  const last = new Date(lastmod);
+  const days = (Date.now() - last.getTime()) / (1000 * 60 * 60 * 24);
+  if (days <= 7) return "daily";
+  if (days <= 30) return "weekly";
+  if (days <= 180) return "monthly";
+  return "yearly";
+}
+
+// --- XML generator ---
+function generateXml(domain, urls) {
+  const maxCommits = urls.reduce((max, u) => Math.max(max, u.commitCount), 0);
+  let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+  xml += `<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>\n`;
+  xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n`;
+  xml += `        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"\n`;
+  xml += `        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">\n`;
+  urls.forEach(u => {
+    const priority = computePriority(u.commitCount, maxCommits).toFixed(2);
+    const changefreq = computeChangefreq(u.lastmod);
+    xml += `  <url>\n`;
+    xml += `    <loc>${domain}${u.loc}</loc>\n`;
+    xml += `    <lastmod>${u.lastmod}</lastmod>\n`;
+    xml += `    <changefreq>${changefreq}</changefreq>\n`;
+    xml += `    <priority>${priority}</priority>\n`;
+    if (IMAGE_EXTENSIONS.includes(u.ext)) {
+      xml += `    <image:image><image:loc>${domain}${u.loc}</image:loc></image:image>\n`;
+    }
+    if (VIDEO_EXTENSIONS.includes(u.ext)) {
+      xml += `    <video:video>\n`;
+      xml += `      <video:content_loc>${domain}${u.loc}</video:content_loc>\n`;
+      xml += `      <video:title>${path.basename(u.loc)}</video:title>\n`;
+      xml += `      <video:description>Video file ${path.basename(u.loc)}</video:description>\n`;
+      xml += `    </video:video>\n`;
+    }
+    xml += `  </url>\n`;
+  });
+  xml += `</urlset>`;
+  return xml;
+}
+
+// --- JSON generator ---
+function generateJson(domain, urls) {
+  const maxCommits = urls.reduce((max, u) => Math.max(max, u.commitCount), 0);
+  return urls.map(u => ({
+    loc: domain + u.loc,
+    lastmod: u.lastmod,
+    changefreq: computeChangefreq(u.lastmod),
+    priority: computePriority(u.commitCount, maxCommits),
+    type: IMAGE_EXTENSIONS.includes(u.ext) ? "image" : VIDEO_EXTENSIONS.includes(u.ext) ? "video" : "page"
+  }));
+}
+
+// --- TXT generator ---
+function generateTxt(domain, urls) {
+  return urls.map(u => domain + u.loc).join("\n");
+}
+
+// --- Routes ---
+app.use(express.static(path.join(__dirname, "public"))); // serve sitemap.xsl
+
+app.get("/sitemap.xml", (req, res) => {
+  res.type("application/xml");
+  const domain = req.protocol + "://" + req.get("host");
+  res.send(generateXml(domain, cache.get("urls")));
+});
+
+app.get("/sitemap.json", (req, res) => {
+  const domain = req.protocol + "://" + req.get("host");
+  res.json(generateJson(domain, cache.get("urls")));
+});
+
+app.get("/sitemap.txt", (req, res) => {
+  res.type("text/plain");
+  const domain = req.protocol + "://" + req.get("host");
+  res.send(generateTxt(domain, cache.get("urls")));
+});
 
 const port = parseInt(process.env.PORT || "3000");
-
 server.listen({ port }, () => {
   const address = server.address();
   console.log(`Listening on:`);

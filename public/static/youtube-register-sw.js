@@ -1,4 +1,3 @@
-
 "use strict";
 /**
  * Distributed with Ultraviolet and compatible with most configurations.
@@ -8,7 +7,7 @@ const stockSW = "/youtube/sw.js";
 /**
  * List of hostnames that are allowed to run serviceworkers on http://
  */
-const swAllowedHostnames = ["localhost", "127.0.0.1",];
+const swAllowedHostnames = ["localhost", "127.0.0.1"];
 
 /**
  * Global util

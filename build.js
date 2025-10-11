@@ -28,14 +28,15 @@ const Submodules = [
 
 // --- Build commands ---
 const buildCommands = {
-  scramjet: "pnpm install && npm run rewriter:build && npm run build:all",
-  ultraviolet: "pnpm install && pnpm run build",
-  "bare-mux": "pnpm install && pnpm run build",
-  epoxy: "pnpm install && pnpm run build",
-  "libcurl-transport": "pnpm install && pnpm run build",
-  "wisp-client-js": "npm install && npm run build",
-  "bare-server-node": "pnpm install && pnpm run build",
-  "wisp-server-node": "pnpm install && pnpm build",
+  /*
+  "scramjet": "CI=true pnpm install && PATH='$HOME/.cargo/bin:$PATH' npm run rewriter:build && npm run build:all",
+  "ultraviolet": "CI=true pnpm install && pnpm run build",
+  "bare-mux": "CI=true pnpm install && pnpm run build",
+  "epoxy": "CI=true pnpm install && pnpm run build",
+  "libcurl-transport": "CI=truepnpm install && pnpm run build",
+  "wisp-client-js": "CI=truenpm install && npm run build",
+  "bare-server-node": "CI=true pnpm install && pnpm run build",
+  "wisp-server-node": "CI=true pnpm install && pnpm build",*/
 };
 
 // --- Asset building ---
@@ -136,7 +137,7 @@ async function buildSubmodules() {
     }
 
     const wrapped = wrapCommandForWSL(buildcommand, subdir);
-    await exec(wrapped, { shell: true, env: { ...process.env, RELEASE: "1" } });
+    await exec(wrapped, { shell: true, env: { ...process.env, RELEASE: "1" }, stdio: "inherit" });
   }
 }
 
@@ -240,6 +241,84 @@ async function processInputVectors() {
     await rasterizeVectorFallbacks(file, INPUT_VECTORS, OUTPUT_OUTVECT);
   });
 }
+const HTML_EXT = ".html";
+const IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".avif"];
+const VIDEO_EXTENSIONS = [".mp4", ".webm", ".mov"];
+
+function getGitLastMod(filePath) {
+  try {
+    return execSync(`git log -1 --format=%cI -- "${filePath}"`, {
+      encoding: "utf8",
+    }).trim();
+  } catch {
+    return null;
+  }
+}
+function getGitCommitCount(filePath) {
+  try {
+    return (
+      parseInt(
+        execSync(`git log --oneline -- "${filePath}" | wc -l`, {
+          encoding: "utf8",
+        }).trim(),
+        10,
+      ) || 0
+    );
+  } catch {
+    return 0;
+  }
+}
+
+function crawl(dir, baseUrl = "") {
+  let results = [];
+  const list = fs.readdirSync(dir);
+  list.forEach((file) => {
+    const filePath = path.join(dir, file);
+    const stat = fs.statSync(filePath);
+    if (stat.isDirectory()) {
+      results = results.concat(crawl(filePath, baseUrl + "/" + file));
+    } else {
+      const ext = path.extname(file).toLowerCase();
+      if (![HTML_EXT, ...IMAGE_EXTENSIONS, ...VIDEO_EXTENSIONS].includes(ext))
+        return;
+      let urlPath =
+        ext === HTML_EXT && file.toLowerCase() === "index.html"
+          ? baseUrl === ""
+            ? "/"
+            : baseUrl
+          : baseUrl + "/" + file;
+      const lastmod = getGitLastMod(filePath) || stat.mtime.toISOString();
+      const commitCount = getGitCommitCount(filePath);
+      const maxCommits = results.reduce((max, u) => Math.max(max, u.commitCount), 0);
+      const urls = results.map(u => ({
+        ...u,
+        priority: computePriority(u.commitCount, maxCommits),
+        changefreq: computeChangefreq(u.lastmod)
+      }));
+      results.push({
+        loc: urlPath.replace(/\/+/g, "/"),
+        lastmod,
+        ext,
+        commitCount,
+      });
+    }
+  });
+  return results;
+}
+function computePriority(commitCount, maxCommits) {
+  if (maxCommits === 0) return 0.5;
+  const normalized = commitCount / maxCommits;
+  return Math.max(0.1, Math.min(1.0, normalized));
+}
+
+function computeChangefreq(lastmod) {
+  const last = new Date(lastmod);
+  const days = (Date.now() - last.getTime()) / (1000 * 60 * 60 * 24);
+  if (days <= 7) return "daily";
+  if (days <= 30) return "weekly";
+  if (days <= 180) return "monthly";
+  return "yearly";
+}
 
 async function main() {
   const start = Date.now();
@@ -252,6 +331,9 @@ async function main() {
 
   await processInputImages();
   await processInputVectors();
+  const urls = crawl(path.join(__dirname, "public"));
+  fs.writeFileSync(".sitemap-base.json", JSON.stringify(urls, null, 2));
+  console.log("Sitemap base built with", urls.length, "entries");
 
   logSection(`Done in ${(Date.now() - start) / 1000}s`);
 }

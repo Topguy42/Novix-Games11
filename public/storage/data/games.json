@@ -42,14 +42,11 @@
       "imageUrl": "/storage/images/main/ragdoll-hit.jpeg",
       "categories": ["2 player", "skill"]
     },
-        {
+    {
       "label": "Clash Royale",
       "url": "/iframe.html?url=/storage/ag/g/clash-royale",
       "imageUrl": "/storage/images/main/clash.jpeg",
-      "categories": [
-        "skill",
-        "action"
-      ]
+      "categories": ["skill", "action"]
     },
     {
       "label": "Fortnite",

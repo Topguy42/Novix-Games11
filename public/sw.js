@@ -16,7 +16,10 @@ async function handleRequest(event) {
 
   const url = new URL(event.request.url);
 
-  if (url.hostname.includes("youtube.com") || url.hostname.includes("youtube-nocookie.com")) {
+  if (
+    url.hostname.includes("youtube.com") ||
+    url.hostname.includes("youtube-nocookie.com")
+  ) {
     const redirectUrl = `/api/youtube-bypass/embed.html#${url.href}`;
     return Response.redirect(redirectUrl, 302);
   }
