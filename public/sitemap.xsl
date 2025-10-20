@@ -9,8 +9,15 @@
   <xsl:template match="sitemap:urlset">
     <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
       <head>
-        <title>Sitemap</title>
+        <title>PeteZah Sitemap</title>
         <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="icon" type="image/png" href="/storage/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/svg+xml" href="/storage/images/favicon.svg" />
+        <link rel="shortcut icon" href="/storage/images/favicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/storage/images/apple-touch-icon.png" />
+        <meta name="apple-mobile-web-app-title" content="PeteZah" />
+        <link rel="manifest" href="/storage/images/site.webmanifest" />
         <style>
           @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&amp;display=swap');
           body {

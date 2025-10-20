@@ -228,7 +228,7 @@ app.post('/api/upload-profile-pic', async (req, res) => {
     }
     const userId = req.session.user.id;
     const fileName = `${userId}/${Date.now()}-${file.name}`;
-    const { data, error } = await supabase.storage.from('profile-pics').upload(fileName, file.data, { contentType: file.mimetype });
+    const { error } = await supabase.storage.from('profile-pics').upload(fileName, file.data, { contentType: file.mimetype });
     if (error) throw error;
     const { data: publicUrlData } = supabase.storage.from('profile-pics').getPublicUrl(fileName);
     const { error: updateError } = await supabase.auth.updateUser({

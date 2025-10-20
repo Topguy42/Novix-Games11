@@ -41,7 +41,7 @@ setInterval(async function () {
 }, 2000);
 
 let pUrl = '';
-const observer = new MutationObserver(async function (mutations) {
+const observer = new MutationObserver(async function () {
   if (window.location.href !== pUrl) {
     pUrl = window.location.href;
     await replacePlayer();
@@ -50,6 +50,6 @@ const observer = new MutationObserver(async function (mutations) {
 const config = { subtree: true, childList: true };
 observer.observe(document, config);
 
-document.addEventListener('navigate', async (event) => {
+document.addEventListener('navigate', async () => {
   location.reload();
 });
