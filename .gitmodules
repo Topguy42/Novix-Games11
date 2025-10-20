@@ -19,3 +19,6 @@
 [submodule "external/ultraviolet"]
 	path = external/ultraviolet
 	url = https://github.com/titaniumnetwork-dev/Ultraviolet.git
+[submodule "external/scramjet"]
+	path = external/scramjet
+	url = https://github.com/Proxy-alt/scramjet.git
