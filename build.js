@@ -1,5 +1,6 @@
 // build.js
 import { execSync, spawn } from 'child_process';
+import git from 'isomorphic-git';
 import { promises as fs } from 'fs';
 import fse from 'fs-extra';
 import minimist from 'minimist';
@@ -7,11 +8,46 @@ import os from 'os';
 import path from 'path';
 import sharp from 'sharp';
 import { fileURLToPath } from 'url';
+import { createWriteStream } from 'fs';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projdir = __dirname;
+
+// JSON stream writer for large arrays
+class JsonArrayWriter {
+  constructor(filePath) {
+    this.stream = createWriteStream(filePath);
+    this.count = 0;
+    this.stream.write('[\n');
+  }
+
+  async write(obj) {
+    if (this.count > 0) {
+      this.stream.write(',\n');
+    }
+    this.stream.write('  ' + JSON.stringify(obj));
+    this.count++;
+  }
+
+  async end() {
+    this.stream.write('\n]\n');
+    return new Promise((resolve, reject) => {
+      this.stream.end(err => err ? reject(err) : resolve(this.count));
+    });
+  }
+}
+
+// Move remaining top-level constants and configuration outside the class
 const args = minimist(process.argv.slice(2));
 const SKIP_SUBMODULES = args['skip-submodules'] || process.env.SKIP_SUBMODULES === '1' || false;
+const USAGE = `build.js [options]
+
+Options:
+  --help, -h              Show this help message
+  --skip-submodules       Skip building external submodules (env SKIP_SUBMODULES=1)
+  --env=NAME              Set environment mode (e.g., --env=debug)
+`;
 
 // --- Submodules configuration (mirrors .gitmodules and bash array)
 const Submodules = ['scramjet', 'ultraviolet', 'bare-mux', 'libcurl-transport', 'epoxy', 'wisp-client-js', 'bare-server-node', 'wisp-server-node'];
@@ -107,7 +143,7 @@ function wrapCommandForWSL(command, cwd) {
     .replace(/\\/g, '/')
     .replace(/^([A-Za-z]):/, '/mnt/$1')
     .toLowerCase();
-  return `wsl bash -c "cd '${wslPath}' && ${command}"`;
+  return `wsl bash -c "source ~/.bashrc && cd '${wslPath}' && ${command}"`;
 }
 
 async function buildSubmodules() {
@@ -252,46 +288,71 @@ const HTML_EXT = '.html';
 const IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.avif'];
 const VIDEO_EXTENSIONS = ['.mp4', '.webm', '.mov'];
 
-function getGitLastMod(filePath) {
+// Synchronous git helpers removed in favor of async variants (getGitLastModAsync, getGitCommitCountAsync)
+// Async crawl that collects file entries without running git per-file synchronously
+async function crawlAsync(dir, baseUrl = '') {
+  const results = [];
+  const entries = await fse.readdir(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      const child = await crawlAsync(full, baseUrl + '/' + entry.name);
+      results.push(...child);
+      continue;
+    }
+    const ext = path.extname(entry.name).toLowerCase();
+    if (![HTML_EXT, ...IMAGE_EXTENSIONS, ...VIDEO_EXTENSIONS].includes(ext)) continue;
+    // Determine URL path: index.html maps to directory
+    const urlPath = ext === HTML_EXT && entry.name.toLowerCase() === 'index.html' ? (baseUrl === '' ? '/' : baseUrl) : baseUrl + '/' + entry.name;
+    const stat = await fse.stat(full);
+    // For now set lastmod and commitCount to null; we'll fetch in parallel later
+    results.push({ filePath: full, loc: urlPath.replace(/\/+/g, '/'), lastmod: stat.mtime.toISOString(), ext, commitCount: 0 });
+  }
+  return results;
+}
+
+// execPromise removed; replaced by isomorphic-git
+
+// Use isomorphic-git for fast, native git metadata
+const workdir = __dirname;
+async function getGitLastModAsync(filePath) {
   try {
-    return execSync(`git log -1 --format=%cI -- "${filePath}"`, {
-      encoding: 'utf8'
-    }).trim();
+    const relPath = path.relative(workdir, filePath).replace(/\\/g, '/');
+    const commits = await git.log({ fs: fse, dir: workdir, filepath: relPath, depth: 1 });
+    if (commits && commits.length > 0) {
+      return new Date(commits[0].commit.committer.timestamp * 1000).toISOString();
+    }
+    return null;
   } catch {
     return null;
   }
 }
-function getGitCommitCount(filePath) {
+
+async function getGitCommitCountAsync(filePath) {
   try {
-    // Use git rev-list --count which is cross-platform and returns a simple integer
-    return parseInt(execSync(`git rev-list --count HEAD -- "${filePath}"`, { encoding: 'utf8' }).trim(), 10) || 0;
+    const relPath = path.relative(workdir, filePath).replace(/\\/g, '/');
+    const commits = await git.log({ fs: fse, dir: workdir, filepath: relPath });
+    return commits.length;
   } catch {
     return 0;
   }
 }
-function crawl(dir, baseUrl = '') {
-  let results = [];
-  const list = fse.readdirSync(dir);
-  list.forEach((entry) => {
-    const filePath = path.join(dir, entry);
-    const stat = fse.statSync(filePath);
-    if (stat.isDirectory()) {
-      results = results.concat(crawl(filePath, baseUrl + '/' + entry));
-    } else {
-      const ext = path.extname(entry).toLowerCase();
-      if (![HTML_EXT, ...IMAGE_EXTENSIONS, ...VIDEO_EXTENSIONS].includes(ext)) return;
-      const urlPath = ext === HTML_EXT && entry.toLowerCase() === 'index.html' ? (baseUrl === '' ? '/' : baseUrl) : baseUrl + '/' + entry;
-      const lastmod = getGitLastMod(filePath) || stat.mtime.toISOString();
-      const commitCount = getGitCommitCount(filePath);
-      results.push({
-        loc: urlPath.replace(/\/+/g, '/'),
-        lastmod,
-        ext,
-        commitCount
-      });
+
+// Simple concurrency limiter for promises
+function withConcurrencyLimit(items, limit, fn) {
+  const results = [];
+  let i = 0;
+  const workers = new Array(Math.min(limit, items.length)).fill(null).map(async () => {
+    while (i < items.length) {
+      const idx = i++;
+      try {
+        results[idx] = await fn(items[idx], idx);
+      } catch {
+        results[idx] = null;
+      }
     }
   });
-  return results;
+  return Promise.all(workers).then(() => results);
 }
 function computePriority(commitCount, maxCommits) {
   if (maxCommits === 0) return 0.5;
@@ -299,9 +360,37 @@ function computePriority(commitCount, maxCommits) {
   return Math.max(0.1, Math.min(1.0, normalized));
 }
 
+function computeChangefreq(lastmod) {
+  const last = new Date(lastmod);
+  const days = (Date.now() - last.getTime()) / (1000 * 60 * 60 * 24);
+  if (isNaN(days)) return 'monthly';
+  if (days <= 7) return 'daily';
+  if (days <= 30) return 'weekly';
+  if (days <= 180) return 'monthly';
+  return 'yearly';
+}
+
+function formatDuration(ms) {
+  let s = Math.floor(ms / 1000);
+  const h = Math.floor(s / 3600);
+  s = s % 3600;
+  const m = Math.floor(s / 60);
+  s = s % 60;
+  let out = '';
+  if (h > 0) out += `${h}h `;
+  if (m > 0 || h > 0) out += `${m}m `;
+  out += `${s}s`;
+  return out.trim();
+}
+
 async function main() {
   const start = Date.now();
   logSection(`Build start (${new Date().toLocaleString()}) on ${os.platform()} node ${process.version}`);
+
+  if (args.help || args.h) {
+    console.log(USAGE);
+    return;
+  }
 
   if (!SKIP_SUBMODULES) {
     await ensureSubmodules();
@@ -312,20 +401,56 @@ async function main() {
 
   await processInputImages();
   await processInputVectors();
-  const urls = crawl(path.join(__dirname, 'public'));
-  // Post-process sitemap entries: compute max commit count so priority can be normalized,
-  // and compute change frequency from lastmod.
-  const maxCommits = urls.reduce((m, u) => Math.max(m, u.commitCount || 0), 0);
-  const processed = urls.map((u) => ({
-    ...u,
-    priority: computePriority(u.commitCount || 0, maxCommits),
-    changefreq: computeChangefreq(u.lastmod)
-  }));
+  // Crawl files asynchronously
+  const crawled = await crawlAsync(path.join(__dirname, 'public'));
+  console.log('Crawled', crawled.length, 'files, fetching git metadata in parallel...');
 
-  fse.writeFileSync('.sitemap-base.json', JSON.stringify(processed, null, 2));
-  console.log('Sitemap base built with', processed.length, 'entries');
+  // Initialize JSON array writer
+  const writer = new JsonArrayWriter('.sitemap-base.json');
 
-  logSection(`Done in ${(Date.now() - start) / 1000}s`);
+  // Process files in batches for memory efficiency
+  const batchSize = 20;
+  let processed = 0;
+  let maxCommits = 0;
+  const batches = Math.ceil(crawled.length / batchSize);
+
+  for (let i = 0; i < batches; i++) {
+    const start = i * batchSize;
+    const end = Math.min(start + batchSize, crawled.length);
+    const batch = crawled.slice(start, end);
+
+    // Enrich batch entries with git metadata in parallel
+    const enriched = await withConcurrencyLimit(batch, 40, async (entry) => {
+      const [lm, cc] = await Promise.all([getGitLastModAsync(entry.filePath), getGitCommitCountAsync(entry.filePath)]);
+      const commitCount = cc || 0;
+      maxCommits = Math.max(maxCommits, commitCount);
+      return {
+        loc: entry.loc,
+        lastmod: lm || entry.lastmod,
+        ext: entry.ext,
+        commitCount
+      };
+    });
+
+    // Process and write entries
+    for (const entry of enriched) {
+      await writer.write({
+        ...entry,
+        priority: computePriority(entry.commitCount, maxCommits),
+        changefreq: computeChangefreq(entry.lastmod)
+      });
+      processed++;
+    }
+
+    if ((i + 1) % 5 === 0 || i === batches - 1) {
+      console.log(`Processed ${processed}/${crawled.length} files...`);
+    }
+  }
+
+  const finalCount = await writer.end();
+  console.log('Sitemap base built with', finalCount, 'entries');
+
+  logSection(`Done in ${formatDuration(Date.now() - start)}`);
 }
 
 main().catch((err) => {

@@ -47,13 +47,12 @@ export default defineConfig([
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
-        gfm: true
       }
     },
     rules: {
       'markdown/no-html': 'warn',
       'markdown/no-bare-urls': 'warn',
-      'markdown/no-missing-label-refs': 'warn'
+      'markdown/no-missing-label-refs': 'off'
     }
   },
   {

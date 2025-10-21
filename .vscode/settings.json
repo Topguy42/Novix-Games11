@@ -81,8 +81,8 @@
   },
   // File assolciations
   "files.associations": {
-    "*.env": "dotenv",
+    ".env*": "dotenv",
     "example.env": "dotenv",
     "*.toml": "toml"
-  }
+  },
 }
