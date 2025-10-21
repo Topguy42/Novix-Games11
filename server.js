@@ -1,25 +1,33 @@
 import { server as wisp } from '@mercuryworkshop/wisp-js/server';
+import { epoxyPath } from '@mercuryworkshop/epoxy-transport';
+import { libcurlPath } from '@mercuryworkshop/libcurl-transport';
+import { baremuxPath } from '@mercuryworkshop/bare-mux/node';
+import { scramjetPath } from '@mercuryworkshop/scramjet/path';
+import { uvPath } from '@titaniumnetwork-dev/ultraviolet';
 import { createClient } from '@supabase/supabase-js';
 import { createBareServer } from '@tomphttp/bare-server-node';
+import express from 'express';
+import session from 'express-session';
+import fileUpload from 'express-fileupload';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import dotenv from 'dotenv';
-import express from 'express';
-import fileUpload from 'express-fileupload';
 import rateLimit from 'express-rate-limit';
-import session from 'express-session';
-import fs from 'fs';
-import NodeCache from 'node-cache';
-import fetch from 'node-fetch';
-import crypto from 'node:crypto';
+import dotenv from 'dotenv';
 import { createServer } from 'node:http';
 import { hostname } from 'node:os';
 import path, { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import crypto from 'node:crypto';
+import fs from 'fs';
+import net from 'node:net';
+import cluster from 'node:cluster';
+import fetch from 'node-fetch';
+import NodeCache from 'node-cache';
 import { signinHandler } from './server/api/signin.js';
 import { signupHandler } from './server/api/signup.js';
-let SESSION_SECRET;
+
 const cache = new NodeCache({ stdTTL: 86400 });
+let SESSION_SECRET;
 dotenv.config();
 const envFile = `.env.${process.env.NODE_ENV || 'production'}`;
 if (fs.existsSync(envFile)) {
@@ -32,7 +40,6 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 const bare = createBareServer('/bare/');
 const app = express();
 const publicPath = 'public';
-
 app.use(
   cors({
     origin: '*',
@@ -58,6 +65,12 @@ app.use(
   })
 );
 app.use(cookieParser());
+const getRandomIPv6 = () => {
+  const i = Math.floor(Math.random() * 5000) + 1;
+  return `2607:5300:205:200:${i.toString(16).padStart(4, '0')}::1`;
+};
+app.use("/baremux/", express.static(baremuxPath));
+app.use("/epoxy/", express.static(epoxyPath));
 
 const verifyMiddleware = (req, res, next) => {
   const verified = req.cookies?.verified === 'ok' || req.headers['x-bot-token'] === process.env.BOT_TOKEN;
@@ -320,9 +333,75 @@ app.post('/api/link-account', async (req, res) => {
   }
 });
 
+app.use((req, res) => {
+  return res.status(404).sendFile(join(__dirname, publicPath, "404.html"));
+});
+
+function parseCookies(header) {
+  if (!header) return {};
+  return header.split(';').reduce((acc, cookie) => {
+    const [name, value] = cookie.trim().split('=');
+    acc[name] = value;
+    return acc;
+  }, {});
+}
+
+const isVerified = (req) => {
+  const cookies = parseCookies(req.headers.cookie);
+  return cookies.verified === "ok" || req.headers["x-bot-token"] === process.env.BOT_TOKEN;
+};
+
+const isBrowser = (req) => {
+  const ua = req.headers["user-agent"] || "";
+  return /Mozilla|Chrome|Safari|Firefox|Edge/i.test(ua);
+};
+
+const handleHttpVerification = (req, res, next) => {
+  const acceptsHtml = req.headers.accept?.includes("text/html");
+  if (!acceptsHtml) return next();
+  if (isVerified(req) && isBrowser(req)) return next();
+  if (!isBrowser(req)) {
+    res.writeHead(403, { "Content-Type": "text/plain" });
+    return res.end("Forbidden");
+  }
+  res.writeHead(200, {
+    "Content-Type": "text/html",
+    "Set-Cookie": "verified=ok; Max-Age=86400; Path=/; HttpOnly; SameSite=Lax"
+  });
+  res.end(`
+    <!DOCTYPE html>
+    <html>
+      <body>
+        <script>
+          document.cookie = "verified=ok; Max-Age=86400; SameSite=Lax";
+          setTimeout(() => window.location.replace(window.location.pathname), 100);
+        </script>
+        <noscript>Enable JavaScript to continue.</noscript>
+      </body>
+    </html>
+  `);
+};
+
+const handleUpgradeVerification = (req, socket, next) => {
+  const verified = isVerified(req);
+  const isWsBrowser = isBrowser(req);
+  console.log(`WebSocket Upgrade Attempt: URL=${req.url}, Verified=${verified}, IsBrowser=${isWsBrowser}, Cookies=${req.headers.cookie || 'none'}`);
+  if (req.url.startsWith("/wisp/")) {
+    return next();
+  }
+  if (verified && isWsBrowser) {
+    return next();
+  }
+  console.log(`WebSocket Rejected: URL=${req.url}, Reason=${verified ? 'Not a browser' : 'Not verified'}`);
+  socket.destroy();
+};
+
 const server = createServer((req, res) => {
   if (bare.shouldRoute(req)) {
-    bare.routeRequest(req, res);
+    handleHttpVerification(req, res, () => {
+      req.ipv6 = getRandomIPv6();
+      bare.routeRequest(req, res);
+    });
   } else {
     app.handle(req, res);
   }
@@ -330,9 +409,15 @@ const server = createServer((req, res) => {
 
 server.on('upgrade', (req, socket, head) => {
   if (bare.shouldRoute(req)) {
-    bare.routeUpgrade(req, socket, head);
-  } else if (req.url && req.url.startsWith('/wisp/')) {
-    wisp.routeRequest(req, socket, head);
+    handleUpgradeVerification(req, socket, () => {
+      req.ipv6 = getRandomIPv6();
+      bare.routeUpgrade(req, socket, head);
+    });
+  } else if (req.url && req.url.startsWith("/wisp/")) {
+    handleUpgradeVerification(req, socket, () => {
+      req.ipv6 = getRandomIPv6();
+      wisp.routeRequest(req, socket, head);
+    });
   } else {
     socket.end();
   }
