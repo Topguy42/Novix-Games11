@@ -204,7 +204,7 @@
       }, 50);
     </script>
     <script>
-      if (!'retry') {
+      if (window.location.search.includes('retry')) {
         navigator.serviceWorker.getRegistrations().then((registrations) => {
           // Unregister all service workers
           const unregisterPromises = registrations.map((reg) =>

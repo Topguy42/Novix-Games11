@@ -78,12 +78,9 @@ nvm use 22
 # Install pnpm globally
 if ! has pnpm; then
   echo "Installing pnpm..."
-  npm install -g pnpm
-  pnpm setup
-  export PATH="~/.nvm/versions/node/v22.21.0/bin:$PATH"
-  source ~/.bashrc
   corepack enable
   corepack prepare pnpm@latest --activate
+  source "$HOME/.bashrc"
 fi
 
 # Install rspack, typescript, rslib globally

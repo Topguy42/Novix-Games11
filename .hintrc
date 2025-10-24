@@ -1,7 +1,6 @@
 {
-  "extends": [
-    "development"
-  ],
+  "$schema": "https://www.schemastore.org/htmlhint.json",
+  "extends": ["development"],
   "hints": {
     "axe/text-alternatives": [
       "default",
@@ -12,10 +11,7 @@
     "compat-api/css": [
       "default",
       {
-        "ignore": [
-          "text-wrap",
-          "text-wrap: nowrap"
-        ]
+        "ignore": ["text-wrap", "text-wrap: nowrap"]
       }
     ],
     "no-inline-styles": "off",

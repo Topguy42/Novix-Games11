@@ -39,7 +39,3 @@
     SUPABASE_KEY = "change me to your supabase anon key"
     SESSION_SECRET = "change me to your express session secret"
     PORT = "3000"
-
-  [dev]
-    command = "pnpm install && pnpm start"
-    port = 3000

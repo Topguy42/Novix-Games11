@@ -1,14 +1,13 @@
 // build.js
 import { execSync, spawn } from 'child_process';
-import git from 'isomorphic-git';
-import { promises as fs } from 'fs';
+import { createWriteStream, promises as fs } from 'fs';
 import fse from 'fs-extra';
+import git from 'isomorphic-git';
 import minimist from 'minimist';
 import os from 'os';
 import path from 'path';
 import sharp from 'sharp';
 import { fileURLToPath } from 'url';
-import { createWriteStream } from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -33,7 +32,7 @@ class JsonArrayWriter {
   async end() {
     this.stream.write('\n]\n');
     return new Promise((resolve, reject) => {
-      this.stream.end(err => err ? reject(err) : resolve(this.count));
+      this.stream.end((err) => (err ? reject(err) : resolve(this.count)));
     });
   }
 }

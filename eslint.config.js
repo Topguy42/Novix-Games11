@@ -46,7 +46,7 @@ export default defineConfig([
     languageOptions: {
       parserOptions: {
         ecmaVersion: 'latest',
-        sourceType: 'module',
+        sourceType: 'module'
       }
     },
     rules: {
@@ -74,7 +74,8 @@ export default defineConfig([
       'public/epoxy/**/*',
       'public/baremux/**/*',
       'public/youtube/**/*.js',
-      'public/static/uv/**/*'
+      'public/static/uv/**/*',
+      '.sitemap-base.json'
     ]
   },
   {

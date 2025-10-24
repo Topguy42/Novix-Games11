@@ -84,5 +84,5 @@
     ".env*": "dotenv",
     "example.env": "dotenv",
     "*.toml": "toml"
-  },
+  }
 }
