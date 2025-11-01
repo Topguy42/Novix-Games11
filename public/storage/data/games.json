@@ -110,7 +110,7 @@
     },
     {
       "label": "Fortnite",
-      "url": "/iframe.html?url=/storage/ag/g/fortnight",
+      "url": "/iframe.html?url=/storage/ag/a/geforce",
       "imageUrl": "/storage/images/main/fakefortnight.jpg",
       "categories": [
         "shooting"
@@ -5484,7 +5484,7 @@
     },
     {
       "label": "Fortnite (Geforce NOW)",
-      "url": "/iframe.html?url=/embed.html#https://play.geforcenow.com/mall/#/deeplink?game-id=46bfab06-d864-465d-9e56-2d9e45cdee0a",
+      "url": "/iframe.html?url=/storage/ag/a/geforce",
       "imageUrl": "/storage/images/main2/fortnite.webp",
       "categories": [
         "shooting"
