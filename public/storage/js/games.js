@@ -26,7 +26,7 @@ let games = [];
                 }
                 div.innerHTML = `
                     <a href="${game.url}" class="game-link" data-url="${game.url}">
-                        <img src="${game.imageUrl}" alt="${game.label}">
+                        <img src="${game.imageUrl}" alt="${game.label}" loading="lazy" decoding="async">
                         <div class="label">${game.label}</div>
                     </a>
                 `;

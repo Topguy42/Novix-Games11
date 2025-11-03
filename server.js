@@ -44,6 +44,17 @@ const app = express();
 app.use(cookieParser());
 
 app.use(express.static(publicPath));
+app.use("/storage/data", express.static(path.join(__dirname, "storage", "data"), {
+  setHeaders: (res, path) => {
+    if (path.endsWith(".json")) {
+      res.setHeader("Cache-Control", "public, max-age=3600");
+    } else if (/\.(png|jpg|jpeg|gif|webp|avif|svg)$/i.test(path)) {
+      res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+    } else {
+      res.setHeader("Cache-Control", "public, max-age=86400");
+    }
+  }
+}));
 app.use("/scram/", express.static(scramjetPath));
 app.get('/scramjet.all.js', (req, res) => {
   return res.sendFile(path.join(scramjetPath, 'scramjet.all.js'));
@@ -408,9 +419,12 @@ server.on("upgrade", (req, socket, head) => {
   }
 });
 // In my serverside config I rewrite /api/bare-premium/ and /api/wisp-premium/ to go to a bare/wisp servers from non-flagged ip datacenters to allow for cloudflare/google protected sites to work.
-// If you are self hosting, this will not apply to you, and google/youtube/cloudflare protected sites will probably not work unless you run this on a non-flagged.
+// If you are self hosting, this will not apply to you, and google/youtube/cloudflare protected sites will probably not work unless you run this on a non-flagged ip.
 
 const port = parseInt(process.env.PORT || "3000");
+
+server.keepAliveTimeout = 5000;  
+server.headersTimeout = 6000;    
 
 server.listen({ port }, () => {
   const address = server.address();
