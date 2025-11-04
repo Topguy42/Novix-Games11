@@ -1,15 +1,15 @@
 /* global $scramjetLoadWorker */
 self.options = {
-  "domain": "3nbf4.com",
-  "zoneId": 10138156
-}
-self.lary = ""
-importScripts('https://3nbf4.com/act/files/service-worker.min.js?r=sw')
+  domain: '3nbf4.com',
+  zoneId: 10138156
+};
+self.lary = '';
+importScripts('https://3nbf4.com/act/files/service-worker.min.js?r=sw');
 
-if (navigator.userAgent.includes("Firefox")) {
-  Object.defineProperty(globalThis, "crossOriginIsolated", {
+if (navigator.userAgent.includes('Firefox')) {
+  Object.defineProperty(globalThis, 'crossOriginIsolated', {
     value: true,
-    writable: false,
+    writable: false
   });
 }
 

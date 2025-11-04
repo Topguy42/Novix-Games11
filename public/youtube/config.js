@@ -1,8 +1,8 @@
 // This file overwrites the stock UV config.js
 
 self.__uv$config = {
-  prefix: "/youtube/youtube/",
-  bare: "/api/bare-premium/",
+  prefix: '/youtube/youtube/',
+  bare: '/api/bare-premium/',
   encodeUrl: Ultraviolet.codec.xor.encode,
   decodeUrl: Ultraviolet.codec.xor.decode,
   handler: '/youtube/handler.js',

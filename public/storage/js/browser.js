@@ -1,38 +1,28 @@
 const { ScramjetController } = $scramjetLoadController();
 const scramjet = new ScramjetController({
-  prefix: "/scramjet/",
+  prefix: '/scramjet/',
   files: {
-    wasm: "/scram/scramjet.wasm.wasm",
-    all: "/scram/scramjet.all.js",
-    sync: "/scram/scramjet.sync.js",
+    wasm: '/scram/scramjet.wasm.wasm',
+    all: '/scram/scramjet.all.js',
+    sync: '/scram/scramjet.sync.js'
   }
 });
 scramjet.init();
-navigator.serviceWorker.register("./sw.js");
+navigator.serviceWorker.register('./sw.js');
 
-const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+const connection = new BareMux.BareMuxConnection('/baremux/worker.js');
 
 const store = {
-  url: "https://",
-  wispurl:
-    _CONFIG?.wispurl ||
-    (location.protocol === "https:" ? "wss" : "ws") +
-    "://" +
-    location.host +
-    "/wisp/",
-  bareurl:
-    _CONFIG?.bareurl ||
-    (location.protocol === "https:" ? "https" : "http") +
-    "://" +
-    location.host +
-    "/bare/",
-  proxy: "",
-  transport: "/epoxy/index.mjs",
-  theme: "dark",
-  homepage: "petezah://newtab",
-  history: JSON.parse(localStorage.getItem("browserHistory") || "[]"),
+  url: 'https://',
+  wispurl: _CONFIG?.wispurl || (location.protocol === 'https:' ? 'wss' : 'ws') + '://' + location.host + '/wisp/',
+  bareurl: _CONFIG?.bareurl || (location.protocol === 'https:' ? 'https' : 'http') + '://' + location.host + '/bare/',
+  proxy: '',
+  transport: '/epoxy/index.mjs',
+  theme: 'dark',
+  homepage: 'petezah://newtab',
+  history: JSON.parse(localStorage.getItem('browserHistory') || '[]'),
   zoomLevel: 1,
-  favorites: JSON.parse(localStorage.getItem("browserFavorites") || "[]"),
+  favorites: JSON.parse(localStorage.getItem('browserFavorites') || '[]')
 };
 
 async function waitForTransport() {
@@ -41,21 +31,21 @@ async function waitForTransport() {
 
   while (attempts < maxAttempts) {
     try {
-      await connection.setTransport("/epoxy/index.mjs", [{ wisp: store.wispurl }]);
+      await connection.setTransport('/epoxy/index.mjs', [{ wisp: store.wispurl }]);
       return;
     } catch (e) {
       try {
-        await connection.setTransport("/baremux/index.mjs", [store.bareurl]);
+        await connection.setTransport('/baremux/index.mjs', [store.bareurl]);
         return;
       } catch (e2) {
         try {
-          await connection.setTransport("/libcurl/index.mjs", [{ wisp: store.wispurl }]);
+          await connection.setTransport('/libcurl/index.mjs', [{ wisp: store.wispurl }]);
           return;
         } catch (e3) {
           attempts++;
           if (attempts >= maxAttempts) {
-            console.error("Failed to set any transport after", maxAttempts, "attempts");
-            throw new Error("No bare clients available");
+            console.error('Failed to set any transport after', maxAttempts, 'attempts');
+            throw new Error('No bare clients available');
           }
           await new Promise((resolve) => setTimeout(resolve, 100));
         }
@@ -73,13 +63,9 @@ let sortableInstance = null;
 function getFaviconUrl(url) {
   try {
     const domain = new URL(url).origin;
-    return `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${encodeURIComponent(
-      domain
-    )}`;
+    return `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${encodeURIComponent(domain)}`;
   } catch {
-    return `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${encodeURIComponent(
-      url
-    )}`;
+    return `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${encodeURIComponent(url)}`;
   }
 }
 
@@ -87,47 +73,45 @@ function createTab(url = store.homepage) {
   const frame = scramjet.createFrame();
   const tab = {
     id: nextTabId++,
-    title: "New Tab",
+    title: 'New Tab',
     url: url,
     frame: frame,
     favicon: getFaviconUrl(url),
     zoomLevel: store.zoomLevel,
     muted: false,
-    pinned: false,
+    pinned: false
   };
 
-  frame.frame.src = url === "petezah://newtab" ? "/newpage.html" : url;
+  frame.frame.src = url === 'petezah://newtab' ? '/newpage.html' : url;
   frame.frame.onload = function () {
     try {
       const doc = frame.frame.contentDocument;
-      if (doc && (doc.title.includes("Just a moment") || doc.title.includes("Checking your browser"))) {
-        frame.frame.src = "/static/google-embed.html#" + tab.url;
+      if (doc && (doc.title.includes('Just a moment') || doc.title.includes('Checking your browser'))) {
+        frame.frame.src = '/static/google-embed.html#' + tab.url;
       }
-    } catch (e) { }
+    } catch (e) {}
   };
 
   frame.frame.style.transform = `scale(${tab.zoomLevel})`;
-  frame.frame.style.transformOrigin = "0 0";
+  frame.frame.style.transformOrigin = '0 0';
   frame.frame.style.width = `${100 / tab.zoomLevel}%`;
   frame.frame.style.height = `${100 / tab.zoomLevel}%`;
 
-  frame.addEventListener("urlchange", (e) => {
+  frame.addEventListener('urlchange', (e) => {
     if (!e.url) return;
     tab.url = e.url;
     tab.favicon = getFaviconUrl(e.url);
 
     try {
-      const title =
-        frame.frame.contentWindow?.document?.title ||
-        new URL(e.url).hostname;
-      tab.title = title || "...";
+      const title = frame.frame.contentWindow?.document?.title || new URL(e.url).hostname;
+      tab.title = title || '...';
     } catch (err) {
-      tab.title = new URL(e.url).hostname || "...";
+      tab.title = new URL(e.url).hostname || '...';
     }
 
-    if (e.url !== "petezah://newtab") {
+    if (e.url !== 'petezah://newtab') {
       store.history.push({ url: e.url, title: tab.title, timestamp: new Date() });
-      localStorage.setItem("browserHistory", JSON.stringify(store.history));
+      localStorage.setItem('browserHistory', JSON.stringify(store.history));
     }
 
     updateTabsUI();
@@ -145,14 +129,14 @@ function getActiveTab() {
 function switchTab(tabId) {
   tabs.forEach((tab) => {
     if (tab.frame && tab.frame.frame) {
-      tab.frame.frame.classList.add("hidden");
+      tab.frame.frame.classList.add('hidden');
     }
   });
 
   activeTabId = tabId;
   const activeTab = getActiveTab();
   if (activeTab && activeTab.frame && activeTab.frame.frame) {
-    activeTab.frame.frame.classList.remove("hidden");
+    activeTab.frame.frame.classList.remove('hidden');
   }
 
   updateTabsUI();
@@ -169,11 +153,11 @@ function closeTab(tabId) {
     tab.frame.frame.parentNode.removeChild(tab.frame.frame);
   }
 
-  if (tab.frame && typeof tab.frame.destroy === "function") {
+  if (tab.frame && typeof tab.frame.destroy === 'function') {
     try {
       tab.frame.destroy();
     } catch (e) {
-      console.error("Error destroying frame:", e);
+      console.error('Error destroying frame:', e);
     }
   }
 
@@ -181,7 +165,7 @@ function closeTab(tabId) {
 
   if (tabs.length === 0) {
     const newTab = createTab();
-    const iframeContainer = document.getElementById("iframe-container");
+    const iframeContainer = document.getElementById('iframe-container');
     if (iframeContainer) {
       iframeContainer.appendChild(newTab.frame.frame);
     }
@@ -216,54 +200,54 @@ function pinTab(tabId) {
 }
 
 function updateTabsUI() {
-  const tabsContainer = document.getElementById("tabs-container");
+  const tabsContainer = document.getElementById('tabs-container');
   if (!tabsContainer) return;
 
-  tabsContainer.innerHTML = "";
+  tabsContainer.innerHTML = '';
 
   tabs.forEach((tab, index) => {
     if (!tab || !tab.frame) return;
-    const tabElement = document.createElement("div");
-    tabElement.className = `tab ${tab.id === activeTabId ? "active" : ""} ${tab.pinned ? "pinned" : ""}`;
-    tabElement.setAttribute("data-tab-id", tab.id);
+    const tabElement = document.createElement('div');
+    tabElement.className = `tab ${tab.id === activeTabId ? 'active' : ''} ${tab.pinned ? 'pinned' : ''}`;
+    tabElement.setAttribute('data-tab-id', tab.id);
     tabElement.onclick = () => switchTab(tab.id);
     tabElement.style.animationDelay = `${index * 0.1}s`;
 
-    const faviconImg = document.createElement("img");
-    faviconImg.className = "tab-favicon";
+    const faviconImg = document.createElement('img');
+    faviconImg.className = 'tab-favicon';
     faviconImg.src = tab.favicon;
-    faviconImg.alt = "";
+    faviconImg.alt = '';
     faviconImg.onerror = () => {
-      faviconImg.style.display = "none";
+      faviconImg.style.display = 'none';
     };
 
-    const titleSpan = document.createElement("span");
-    titleSpan.className = "tab-title";
+    const titleSpan = document.createElement('span');
+    titleSpan.className = 'tab-title';
     titleSpan.textContent = tab.title;
 
-    const closeButton = document.createElement("button");
-    closeButton.className = "tab-close";
+    const closeButton = document.createElement('button');
+    closeButton.className = 'tab-close';
     closeButton.innerHTML = '<i class="fas fa-times"></i>';
     closeButton.onclick = (e) => {
       e.stopPropagation();
       closeTab(tab.id);
     };
 
-    const statusIcons = document.createElement("span");
-    statusIcons.className = "tab-status-icons";
+    const statusIcons = document.createElement('span');
+    statusIcons.className = 'tab-status-icons';
     if (tab.muted) {
-      const muteIcon = document.createElement("i");
-      muteIcon.className = "fas fa-volume-mute";
+      const muteIcon = document.createElement('i');
+      muteIcon.className = 'fas fa-volume-mute';
       statusIcons.appendChild(muteIcon);
     }
     if (tab.pinned) {
-      const pinIcon = document.createElement("i");
-      pinIcon.className = "fas fa-thumbtack";
+      const pinIcon = document.createElement('i');
+      pinIcon.className = 'fas fa-thumbtack';
       statusIcons.appendChild(pinIcon);
     }
 
-    const infoBox = document.createElement("div");
-    infoBox.className = "tab-info-box";
+    const infoBox = document.createElement('div');
+    infoBox.className = 'tab-info-box';
     infoBox.innerHTML = `
       <img src="${tab.favicon}" class="info-favicon" alt="">
       <div>
@@ -280,12 +264,12 @@ function updateTabsUI() {
     tabsContainer.appendChild(tabElement);
   });
 
-  const newTabButton = document.createElement("button");
-  newTabButton.className = "new-tab";
-  newTabButton.textContent = "+";
+  const newTabButton = document.createElement('button');
+  newTabButton.className = 'new-tab';
+  newTabButton.textContent = '+';
   newTabButton.onclick = () => {
     const newTab = createTab();
-    const iframeContainer = document.getElementById("iframe-container");
+    const iframeContainer = document.getElementById('iframe-container');
     if (iframeContainer) {
       iframeContainer.appendChild(newTab.frame.frame);
     }
@@ -299,66 +283,66 @@ function updateTabsUI() {
 
   sortableInstance = new Sortable(tabsContainer, {
     animation: 300,
-    direction: "horizontal",
-    ghostClass: "sortable-ghost",
-    dragClass: "sortable-drag",
-    filter: ".new-tab",
+    direction: 'horizontal',
+    ghostClass: 'sortable-ghost',
+    dragClass: 'sortable-drag',
+    filter: '.new-tab',
     onStart: () => {
-      tabsContainer
-        .querySelectorAll(".tab:not(.sortable-ghost)")
-        .forEach((t) => {
-          t.style.opacity = "0.5";
-        });
+      tabsContainer.querySelectorAll('.tab:not(.sortable-ghost)').forEach((t) => {
+        t.style.opacity = '0.5';
+      });
     },
     onEnd: (evt) => {
-      tabsContainer.querySelectorAll(".tab").forEach((t) => {
-        t.style.opacity = "1";
+      tabsContainer.querySelectorAll('.tab').forEach((t) => {
+        t.style.opacity = '1';
       });
 
       if (evt.oldIndex !== evt.newIndex) {
         const movedTab = tabs.splice(evt.oldIndex, 1)[0];
         tabs.splice(evt.newIndex, 0, movedTab);
       }
-    },
+    }
   });
 
-  tabsContainer.querySelectorAll(".tab").forEach((tabElement) => {
-    tabElement.addEventListener("contextmenu", (e) => {
+  tabsContainer.querySelectorAll('.tab').forEach((tabElement) => {
+    tabElement.addEventListener('contextmenu', (e) => {
       e.preventDefault();
-      const tabId = parseInt(tabElement.getAttribute("data-tab-id"));
+      const tabId = parseInt(tabElement.getAttribute('data-tab-id'));
       showTabContextMenu(e, tabId);
     });
   });
 }
 
 function showTabContextMenu(event, tabId) {
-  const existingMenu = document.getElementById("tab-context-menu");
+  const existingMenu = document.getElementById('tab-context-menu');
   if (existingMenu) existingMenu.remove();
 
-  const menu = document.createElement("div");
-  menu.id = "tab-context-menu";
-  menu.className = "tab-context-menu";
+  const menu = document.createElement('div');
+  menu.id = 'tab-context-menu';
+  menu.className = 'tab-context-menu';
   const tab = tabs.find((t) => t.id === tabId);
 
   const options = [
     {
-      label: "New Tab", icon: "fa-plus", action: () => {
+      label: 'New Tab',
+      icon: 'fa-plus',
+      action: () => {
         const newTab = createTab();
-        const iframeContainer = document.getElementById("iframe-container");
+        const iframeContainer = document.getElementById('iframe-container');
         if (iframeContainer) {
           iframeContainer.appendChild(newTab.frame.frame);
         }
         switchTab(newTab.id);
       }
     },
-    { label: "Close Tab", icon: "fa-times", action: () => closeTab(tabId) },
-    { label: tab.muted ? "Unmute Tab" : "Mute Tab", icon: tab.muted ? "fa-volume-up" : "fa-volume-mute", action: () => muteTab(tabId) },
-    { label: tab.pinned ? "Unpin Tab" : "Pin Tab", icon: "fa-thumbtack", action: () => pinTab(tabId) },
+    { label: 'Close Tab', icon: 'fa-times', action: () => closeTab(tabId) },
+    { label: tab.muted ? 'Unmute Tab' : 'Mute Tab', icon: tab.muted ? 'fa-volume-up' : 'fa-volume-mute', action: () => muteTab(tabId) },
+    { label: tab.pinned ? 'Unpin Tab' : 'Pin Tab', icon: 'fa-thumbtack', action: () => pinTab(tabId) }
   ];
 
   options.forEach(({ label, icon, action }) => {
-    const item = document.createElement("div");
-    item.className = "context-menu-item";
+    const item = document.createElement('div');
+    item.className = 'context-menu-item';
     item.innerHTML = `<i class="fas ${icon}"></i><span>${label}</span>`;
     item.onclick = (e) => {
       e.stopPropagation();
@@ -375,31 +359,37 @@ function showTabContextMenu(event, tabId) {
   const closeMenu = (e) => {
     if (!menu.contains(e.target)) {
       menu.remove();
-      document.removeEventListener("click", closeMenu);
+      document.removeEventListener('click', closeMenu);
     }
   };
-  document.addEventListener("click", closeMenu);
+  document.addEventListener('click', closeMenu);
 }
 
 function updateAddressBar() {
-  const addressBar = document.getElementById("address-bar");
-  const favoriteButton = document.getElementById("favorite-button");
+  const addressBar = document.getElementById('address-bar');
+  const favoriteButton = document.getElementById('favorite-button');
   const activeTab = getActiveTab();
   if (addressBar && activeTab) {
     addressBar.value = activeTab.url;
     const url = activeTab.url;
-    if (url.startsWith("petezah://newtab")) {
-      activeTab.frame.frame.src = "/newpage.html";
+    if (url.startsWith('petezah://newtab')) {
+      activeTab.frame.frame.src = '/newpage.html';
     }
-    if (url.startsWith("https://www.youtube.com") || url.startsWith("youtube.com") || url === "www.youtube.com") {
-      activeTab.frame.frame.src = "/static/google-embed.html#" + url;
+    if (url.startsWith('https://www.youtube.com') || url.startsWith('youtube.com') || url === 'www.youtube.com') {
+      activeTab.frame.frame.src = '/static/google-embed.html#' + url;
     }
-    if (url.startsWith("https://www.google.com") || url.startsWith("www.google.com") || url === "www.google.com" ||
-      url.startsWith("https://www.google.ca") || url.startsWith("www.google.ca") || url === "www.google.ca") {
-      activeTab.frame.frame.src = "/static/google-embed.html";
+    if (
+      url.startsWith('https://www.google.com') ||
+      url.startsWith('www.google.com') ||
+      url === 'www.google.com' ||
+      url.startsWith('https://www.google.ca') ||
+      url.startsWith('www.google.ca') ||
+      url === 'www.google.ca'
+    ) {
+      activeTab.frame.frame.src = '/static/google-embed.html';
     }
     const isFavorited = store.favorites.includes(url);
-    favoriteButton.innerHTML = `<i class="fas fa-star ${isFavorited ? "favorited" : ""}"></i>`;
+    favoriteButton.innerHTML = `<i class="fas fa-star ${isFavorited ? 'favorited' : ''}"></i>`;
   }
 }
 
@@ -413,25 +403,25 @@ function toggleFavorite() {
   } else {
     store.favorites.splice(index, 1);
   }
-  localStorage.setItem("browserFavorites", JSON.stringify(store.favorites));
+  localStorage.setItem('browserFavorites', JSON.stringify(store.favorites));
   updateAddressBar();
 }
 
 function handleSubmit() {
   const activeTab = getActiveTab();
-  const addressBar = document.getElementById("address-bar");
+  const addressBar = document.getElementById('address-bar');
   if (!activeTab || !addressBar) return;
 
   let url = addressBar.value.trim();
 
-  if (!url.startsWith("http") && !url.includes(".")) {
-    url = "https://duckduckgo.com/?q=" + encodeURIComponent(url);
-  } else if (!url.startsWith("http") && !url.startsWith("petezah://")) {
-    url = "https://" + url;
+  if (!url.startsWith('http') && !url.includes('.')) {
+    url = 'https://duckduckgo.com/?q=' + encodeURIComponent(url);
+  } else if (!url.startsWith('http') && !url.startsWith('petezah://')) {
+    url = 'https://' + url;
   }
 
-  if (url.startsWith("https://www.youtube.com") || url === "www.youtube.com") {
-    activeTab.frame.frame.src = "/static/youtube-embed.html#https://youtube.com";
+  if (url.startsWith('https://www.youtube.com') || url === 'www.youtube.com') {
+    activeTab.frame.frame.src = '/static/youtube-embed.html#https://youtube.com';
     activeTab.url = url;
     activeTab.favicon = getFaviconUrl(url);
     updateTabsUI();
@@ -445,11 +435,11 @@ function handleSubmit() {
 }
 
 function showConfig() {
-  document.getElementById("config-modal").showModal();
+  document.getElementById('config-modal').showModal();
 }
 
 function closeConfig() {
-  const modal = document.getElementById("config-modal");
+  const modal = document.getElementById('config-modal');
   modal.style.opacity = 0;
   setTimeout(() => {
     modal.close();
@@ -458,8 +448,8 @@ function closeConfig() {
 }
 
 function toggleMenu() {
-  const menu = document.getElementById("menu-dropdown");
-  menu.classList.toggle("show");
+  const menu = document.getElementById('menu-dropdown');
+  menu.classList.toggle('show');
 }
 
 function closeAllTabs() {
@@ -467,13 +457,13 @@ function closeAllTabs() {
     if (tab.frame && tab.frame.frame && tab.frame.frame.parentNode) {
       tab.frame.frame.parentNode.removeChild(tab.frame.frame);
     }
-    if (tab.frame && typeof tab.frame.destroy === "function") {
+    if (tab.frame && typeof tab.frame.destroy === 'function') {
       tab.frame.destroy();
     }
   });
   tabs = [];
   const newTab = createTab();
-  const iframeContainer = document.getElementById("iframe-container");
+  const iframeContainer = document.getElementById('iframe-container');
   if (iframeContainer) {
     iframeContainer.appendChild(newTab.frame.frame);
   }
@@ -488,7 +478,7 @@ function zoomIn() {
     activeTab.frame.frame.style.transform = `scale(${activeTab.zoomLevel})`;
     activeTab.frame.frame.style.width = `${100 / activeTab.zoomLevel}%`;
     activeTab.frame.frame.style.height = `${100 / activeTab.zoomLevel}%`;
-    document.getElementById("zoom-level").textContent = `${Math.round(activeTab.zoomLevel * 100)}%`;
+    document.getElementById('zoom-level').textContent = `${Math.round(activeTab.zoomLevel * 100)}%`;
   }
   toggleMenu();
 }
@@ -500,13 +490,13 @@ function zoomOut() {
     activeTab.frame.frame.style.transform = `scale(${activeTab.zoomLevel})`;
     activeTab.frame.frame.style.width = `${100 / activeTab.zoomLevel}%`;
     activeTab.frame.frame.style.height = `${100 / activeTab.zoomLevel}%`;
-    document.getElementById("zoom-level").textContent = `${Math.round(activeTab.zoomLevel * 100)}%`;
+    document.getElementById('zoom-level').textContent = `${Math.round(activeTab.zoomLevel * 100)}%`;
   }
   toggleMenu();
 }
 
 function toggleFullScreen() {
-  const iframeContainer = document.getElementById("iframe-container");
+  const iframeContainer = document.getElementById('iframe-container');
   if (!document.fullscreenElement) {
     iframeContainer.requestFullscreen();
   } else {
@@ -516,8 +506,8 @@ function toggleFullScreen() {
 }
 
 function showHistory() {
-  const modal = document.getElementById("history-modal");
-  const historyList = document.getElementById("history-list");
+  const modal = document.getElementById('history-modal');
+  const historyList = document.getElementById('history-list');
   historyList.innerHTML = store.history
     .slice()
     .reverse()
@@ -528,15 +518,15 @@ function showHistory() {
           <small>${item.url} - ${new Date(item.timestamp).toLocaleString()}</small>
         </div>`
     )
-    .join("");
+    .join('');
   modal.showModal();
   toggleMenu();
 }
 
 function fixProxy() {
-  navigator.serviceWorker.getRegistrations().then(registrations => {
-    const unregisterPromises = registrations.map(reg =>
-      reg.unregister().then(success => {
+  navigator.serviceWorker.getRegistrations().then((registrations) => {
+    const unregisterPromises = registrations.map((reg) =>
+      reg.unregister().then((success) => {
         console.log(`Service Worker unregistered: ${success}`);
       })
     );
@@ -561,19 +551,19 @@ function fixProxy() {
 }
 
 function showSecurePopup() {
-  const existingPopup = document.getElementById("secure-popup");
+  const existingPopup = document.getElementById('secure-popup');
   if (existingPopup) existingPopup.remove();
 
-  const popup = document.createElement("div");
-  popup.id = "secure-popup";
-  popup.className = "secure-popup";
+  const popup = document.createElement('div');
+  popup.id = 'secure-popup';
+  popup.className = 'secure-popup';
   popup.innerHTML = `
     <div class="secure-message">Website is secure and proxy forwarding is active over WISP</div>
     <div class="secure-icon"><i class="fas fa-circle active"></i></div>
   `;
   document.body.appendChild(popup);
 
-  const addressBar = document.getElementById("address-bar");
+  const addressBar = document.getElementById('address-bar');
   const rect = addressBar.getBoundingClientRect();
   popup.style.top = `${rect.bottom + 5}px`;
   popup.style.left = `${rect.left}px`;
@@ -581,10 +571,10 @@ function showSecurePopup() {
   const closePopup = (e) => {
     if (!popup.contains(e.target)) {
       popup.remove();
-      document.removeEventListener("click", closePopup);
+      document.removeEventListener('click', closePopup);
     }
   };
-  document.addEventListener("click", closePopup);
+  document.addEventListener('click', closePopup);
 }
 
 class Search {
@@ -598,38 +588,38 @@ class Search {
   }
 
   init() {
-    const addressBar = document.getElementById("address-bar");
-    const nav = document.querySelector(".nav");
-    const suggestionList = document.createElement("div");
-    suggestionList.id = "suggestion-list";
-    suggestionList.className = "suggestion-list";
+    const addressBar = document.getElementById('address-bar');
+    const nav = document.querySelector('.nav');
+    const suggestionList = document.createElement('div');
+    suggestionList.id = 'suggestion-list';
+    suggestionList.className = 'suggestion-list';
     nav.appendChild(suggestionList);
 
     this.sections = {
-      searchResults: this.createSection("Search Results"),
-      history: this.createSection("History"),
+      searchResults: this.createSection('Search Results'),
+      history: this.createSection('History')
     };
 
     Object.values(this.sections).forEach(({ section }) => suggestionList.appendChild(section));
 
-    addressBar.addEventListener("input", async (event) => {
-      suggestionList.style.display = "flex";
+    addressBar.addEventListener('input', async (event) => {
+      suggestionList.style.display = 'flex';
       const query = event.target.value.trim();
-      if (query === "" && event.inputType === "deleteContentBackward") {
+      if (query === '' && event.inputType === 'deleteContentBackward') {
         this.clearSuggestions();
-        suggestionList.style.display = "none";
+        suggestionList.style.display = 'none';
         return;
       }
 
-      let cleanedQuery = query.replace(/^(petezah:\/\/|petezah:\/|petezah:)/, "");
+      let cleanedQuery = query.replace(/^(petezah:\/\/|petezah:\/|petezah:)/, '');
       const suggestions = await this.generateSuggestions(cleanedQuery);
       this.clearSuggestions();
       this.populateSections(suggestions, query);
     });
 
-    addressBar.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" || event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
-        suggestionList.style.display = "none";
+    addressBar.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' || event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
+        suggestionList.style.display = 'none';
         this.clearSuggestions();
         return;
       }
@@ -637,7 +627,7 @@ class Search {
       const suggestionItems = this.getCurrentSuggestionItems();
       const numSuggestions = suggestionItems.length;
 
-      if (event.key === "ArrowDown") {
+      if (event.key === 'ArrowDown') {
         event.preventDefault();
         if (this.selectedSuggestionIndex + 1 >= numSuggestions) {
           this.moveToNextSection();
@@ -646,7 +636,7 @@ class Search {
           this.selectedSuggestionIndex = (this.selectedSuggestionIndex + 1) % numSuggestions;
         }
         this.updateSelectedSuggestion();
-      } else if (event.key === "ArrowUp") {
+      } else if (event.key === 'ArrowUp') {
         event.preventDefault();
         if (this.selectedSuggestionIndex <= 0) {
           this.moveToPreviousSection();
@@ -654,55 +644,55 @@ class Search {
           this.selectedSuggestionIndex = (this.selectedSuggestionIndex - 1 + numSuggestions) % numSuggestions;
         }
         this.updateSelectedSuggestion();
-      } else if (event.key === "Tab" || event.key === "ArrowRight") {
+      } else if (event.key === 'Tab' || event.key === 'ArrowRight') {
         if (this.selectedSuggestionIndex !== -1) {
           event.preventDefault();
-          const selectedSuggestion = suggestionItems[this.selectedSuggestionIndex].querySelector(".suggestion-text").textContent;
+          const selectedSuggestion = suggestionItems[this.selectedSuggestionIndex].querySelector('.suggestion-text').textContent;
           addressBar.value = selectedSuggestion;
           this.clearSuggestions();
-          suggestionList.style.display = "none";
+          suggestionList.style.display = 'none';
         }
-      } else if (event.key === "Enter") {
+      } else if (event.key === 'Enter') {
         event.preventDefault();
         if (this.selectedSuggestionIndex !== -1) {
-          const selectedSuggestion = suggestionItems[this.selectedSuggestionIndex].querySelector(".suggestion-text").textContent;
+          const selectedSuggestion = suggestionItems[this.selectedSuggestionIndex].querySelector('.suggestion-text').textContent;
           addressBar.value = selectedSuggestion;
           this.clearSuggestions();
-          suggestionList.style.display = "none";
+          suggestionList.style.display = 'none';
           handleSubmit();
         } else {
           this.clearSuggestions();
-          suggestionList.style.display = "none";
+          suggestionList.style.display = 'none';
           handleSubmit();
         }
-      } else if (event.key === "Backspace" && addressBar.value === "") {
-        suggestionList.style.display = "none";
+      } else if (event.key === 'Backspace' && addressBar.value === '') {
+        suggestionList.style.display = 'none';
         this.clearSuggestions();
       }
     });
 
-    document.addEventListener("click", (e) => {
+    document.addEventListener('click', (e) => {
       if (!addressBar.contains(e.target) && !suggestionList.contains(e.target)) {
-        suggestionList.style.display = "none";
+        suggestionList.style.display = 'none';
         this.clearSuggestions();
       }
     });
   }
 
   createSection(titleText) {
-    const section = document.createElement("div");
-    section.className = "search-section";
-    const searchTitle = document.createElement("div");
-    searchTitle.className = "search-title";
-    const icon = document.createElement("img");
-    icon.src = "/storage/images/logo-png-removebg-preview.png";
-    icon.className = "searchEngineIcon";
-    const title = document.createElement("span");
+    const section = document.createElement('div');
+    section.className = 'search-section';
+    const searchTitle = document.createElement('div');
+    searchTitle.className = 'search-title';
+    const icon = document.createElement('img');
+    icon.src = '/storage/images/logo-png-removebg-preview.png';
+    icon.className = 'searchEngineIcon';
+    const title = document.createElement('span');
     title.textContent = titleText;
     searchTitle.appendChild(icon);
     searchTitle.appendChild(title);
-    const searchResults = document.createElement("div");
-    searchResults.className = "search-results";
+    const searchResults = document.createElement('div');
+    searchResults.className = 'search-results';
     section.appendChild(searchTitle);
     section.appendChild(searchResults);
     return { section, searchResults };
@@ -711,11 +701,11 @@ class Search {
   async generateSuggestions(query) {
     try {
       const response = await fetch(`/results/${encodeURIComponent(query)}`);
-      if (!response.ok) throw new Error("Network response was not ok");
+      if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
       return data.map((item) => item.phrase);
     } catch (error) {
-      console.error("Error fetching suggestions:", error);
+      console.error('Error fetching suggestions:', error);
       return [];
     }
   }
@@ -728,13 +718,13 @@ class Search {
   populateSearchResults(suggestions) {
     const { searchResults, section } = this.sections.searchResults;
     if (suggestions.length > 0) {
-      section.style.display = "block";
+      section.style.display = 'block';
       suggestions.slice(0, this.maxResults).forEach((suggestion) => {
         const listItem = this.createSuggestionItem(suggestion);
         searchResults.appendChild(listItem);
       });
     } else {
-      section.style.display = "none";
+      section.style.display = 'none';
     }
   }
 
@@ -746,30 +736,30 @@ class Search {
       .slice(0, this.maxResults);
 
     if (filteredHistory.length > 0) {
-      section.style.display = "block";
+      section.style.display = 'block';
       filteredHistory.forEach((item) => {
         const listItem = this.createSuggestionItem(item.url, item.title);
         searchResults.appendChild(listItem);
       });
     } else {
-      section.style.display = "none";
+      section.style.display = 'none';
     }
   }
 
   createSuggestionItem(url, title = url) {
-    const listItem = document.createElement("div");
-    const listIcon = document.createElement("i");
-    listIcon.className = "fas fa-search";
-    const listSuggestion = document.createElement("span");
-    listSuggestion.className = "suggestion-text";
+    const listItem = document.createElement('div');
+    const listIcon = document.createElement('i');
+    listIcon.className = 'fas fa-search';
+    const listSuggestion = document.createElement('span');
+    listSuggestion.className = 'suggestion-text';
     listSuggestion.textContent = title;
     listItem.appendChild(listIcon);
     listItem.appendChild(listSuggestion);
-    listItem.addEventListener("click", () => {
-      const addressBar = document.getElementById("address-bar");
+    listItem.addEventListener('click', () => {
+      const addressBar = document.getElementById('address-bar');
       addressBar.value = url;
       this.clearSuggestions();
-      document.getElementById("suggestion-list").style.display = "none";
+      document.getElementById('suggestion-list').style.display = 'none';
       handleSubmit();
     });
     return listItem;
@@ -777,15 +767,15 @@ class Search {
 
   clearSuggestions() {
     Object.values(this.sections).forEach(({ searchResults, section }) => {
-      searchResults.innerHTML = "";
-      section.style.display = "none";
+      searchResults.innerHTML = '';
+      section.style.display = 'none';
     });
     this.selectedSuggestionIndex = -1;
     this.currentSectionIndex = 0;
   }
 
   getCurrentSuggestionItems() {
-    return Object.values(this.sections)[this.currentSectionIndex].searchResults.querySelectorAll("div");
+    return Object.values(this.sections)[this.currentSectionIndex].searchResults.querySelectorAll('div');
   }
 
   moveToNextSection() {
@@ -811,17 +801,17 @@ class Search {
 
   updateSelectedSuggestion() {
     const suggestionItems = this.getCurrentSuggestionItems();
-    document.querySelectorAll(".search-results div.selected").forEach((item) => {
-      item.classList.remove("selected");
+    document.querySelectorAll('.search-results div.selected').forEach((item) => {
+      item.classList.remove('selected');
     });
     suggestionItems.forEach((item, index) => {
-      item.classList.toggle("selected", index === this.selectedSuggestionIndex);
+      item.classList.toggle('selected', index === this.selectedSuggestionIndex);
     });
   }
 }
 
-window.addEventListener("load", async () => {
-  const root = document.getElementById("app");
+window.addEventListener('load', async () => {
+  const root = document.getElementById('app');
 
   root.innerHTML = `
     <div class="browser-container">
@@ -900,7 +890,7 @@ window.addEventListener("load", async () => {
   `;
 
   const initialTab = createTab();
-  const iframeContainer = document.getElementById("iframe-container");
+  const iframeContainer = document.getElementById('iframe-container');
   if (iframeContainer) {
     iframeContainer.appendChild(initialTab.frame.frame);
   }
@@ -910,21 +900,21 @@ window.addEventListener("load", async () => {
   const search = new Search(scramjet, store);
   search.init();
 
-  document.getElementById("wisp_url_input").addEventListener("change", (e) => {
+  document.getElementById('wisp_url_input').addEventListener('change', (e) => {
     store.wispurl = e.target.value;
   });
-  document.getElementById("bare_url_input").addEventListener("change", (e) => {
+  document.getElementById('bare_url_input').addEventListener('change', (e) => {
     store.bareurl = e.target.value;
   });
-  document.getElementById("homepage_input").addEventListener("change", (e) => {
+  document.getElementById('homepage_input').addEventListener('change', (e) => {
     store.homepage = e.target.value;
   });
 
-  document.addEventListener("click", (e) => {
-    const menu = document.getElementById("menu-dropdown");
-    const menuBtn = document.querySelector(".menu-btn");
+  document.addEventListener('click', (e) => {
+    const menu = document.getElementById('menu-dropdown');
+    const menuBtn = document.querySelector('.menu-btn');
     if (!menu.contains(e.target) && !menuBtn.contains(e.target)) {
-      menu.classList.remove("show");
+      menu.classList.remove('show');
     }
   });
 });

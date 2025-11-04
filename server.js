@@ -11,16 +11,16 @@ import express from 'express';
 import fileUpload from 'express-fileupload';
 import rateLimit from 'express-rate-limit';
 import session from 'express-session';
-import { createServer } from "node:http";
-import path, { join } from "node:path";
-import { hostname } from "node:os";
-import { fileURLToPath } from "node:url";
-import { signupHandler } from "./server/api/signup.js";
-import { signinHandler } from "./server/api/signin.js";
-import fetch from "node-fetch";
 import fs from 'fs';
 import NodeCache from 'node-cache';
+import fetch from 'node-fetch';
 import crypto from 'node:crypto';
+import { createServer } from 'node:http';
+import { hostname } from 'node:os';
+import path, { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { signinHandler } from './server/api/signin.js';
+import { signupHandler } from './server/api/signup.js';
 
 const cache = new NodeCache({ stdTTL: 86400 });
 let SESSION_SECRET;
@@ -33,12 +33,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const { SUPABASE_URL, SUPABASE_KEY } = process.env;
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-const bare = createBareServer("/bare/", {
+const bare = createBareServer('/bare/', {
   requestOptions: {
-    agent: false,
+    agent: false
   }
 });
-const barePremium = createBareServer("/api/bare-premium/");
+const barePremium = createBareServer('/api/bare-premium/');
 const app = express();
 const publicPath = 'public';
 app.use(
@@ -75,17 +75,20 @@ app.use('/epoxy/', express.static(epoxyPath));
 app.use('/libcurl/', express.static(libcurlPath));
 
 app.use(express.static(publicPath));
-app.use("/storage/data", express.static(path.join(__dirname, "storage", "data"), {
-  setHeaders: (res, path) => {
-    if (path.endsWith(".json")) {
-      res.setHeader("Cache-Control", "public, max-age=3600");
-    } else if (/\.(png|jpg|jpeg|gif|webp|avif|svg)$/i.test(path)) {
-      res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
-    } else {
-      res.setHeader("Cache-Control", "public, max-age=86400");
+app.use(
+  '/storage/data',
+  express.static(path.join(__dirname, 'storage', 'data'), {
+    setHeaders: (res, path) => {
+      if (path.endsWith('.json')) {
+        res.setHeader('Cache-Control', 'public, max-age=3600');
+      } else if (/\.(png|jpg|jpeg|gif|webp|avif|svg)$/i.test(path)) {
+        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      } else {
+        res.setHeader('Cache-Control', 'public, max-age=86400');
+      }
     }
-  }
-}));
+  })
+);
 
 const verifyMiddleware = (req, res, next) => {
   const verified = req.cookies?.verified === 'ok' || req.headers['x-bot-token'] === process.env.BOT_TOKEN;
@@ -157,9 +160,7 @@ app.use((req, res, next) => {
   next();
 });
 
-const redirectRoutes = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "config", "redirectitems.json"), "utf8")
-);
+const redirectRoutes = JSON.parse(fs.readFileSync(path.join(__dirname, 'config', 'redirectitems.json'), 'utf8'));
 
 redirectRoutes.forEach(({ path, target }) => {
   app.use(
@@ -167,12 +168,12 @@ redirectRoutes.forEach(({ path, target }) => {
     createProxyMiddleware({
       target,
       changeOrigin: true,
-      pathRewrite: { [`^${path}`]: "" },
+      pathRewrite: { [`^${path}`]: '' }
     })
   );
-  app.get("/ip", async (req, res) => {
+  app.get('/ip', async (req, res) => {
     try {
-      const response = await fetch("https://frogiesarcade.win/ip");
+      const response = await fetch('https://frogiesarcade.win/ip');
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -182,12 +183,12 @@ redirectRoutes.forEach(({ path, target }) => {
       const body = await response.text();
       res.status(response.status).send(body);
     } catch (error) {
-      console.error("Fetch error:", error);
+      console.error('Fetch error:', error);
       res.status(502).send(`Bad Gateway: Failed to fetch from external service\n${error.message}`);
     }
   });
 
-  app.get("/results/:query", async (req, res) => {
+  app.get('/results/:query', async (req, res) => {
     try {
       const query = req.params.query.toLowerCase();
       const response = await fetch(`http://api.duckduckgo.com/ac?q=${encodeURIComponent(query)}&format=json`);
@@ -464,10 +465,10 @@ redirectRoutes.forEach(({ path, target }) => {
       handleUpgradeVerification(req, socket, () => {
         barePremium.routeUpgrade(req, socket, head);
       });
-    } else if (req.url && (req.url.startsWith("/wisp/") || req.url.startsWith("/api/wisp-premium/"))) {
+    } else if (req.url && (req.url.startsWith('/wisp/') || req.url.startsWith('/api/wisp-premium/'))) {
       handleUpgradeVerification(req, socket, () => {
-        if (req.url.startsWith("/api/wisp-premium/")) {
-          req.url = req.url.replace("/api/wisp-premium/", "/wisp/");
+        if (req.url.startsWith('/api/wisp-premium/')) {
+          req.url = req.url.replace('/api/wisp-premium/', '/wisp/');
         }
         wisp.routeRequest(req, socket, head);
       });

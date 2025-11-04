@@ -23,127 +23,90 @@
       "url": "/iframe.html?url=/storage/ag/g/polytrack/",
       "imageUrl": "/storage/ag/g/polytrack/splash.png",
       "categories": ["racing"]
-      "categories": [
-        "racing"
-      ]
     },
     {
       "label": "Ragdoll Archers",
       "url": "/iframe.html?url=/storage/ag/g/ragdoll-archers",
       "imageUrl": "/storage/images/main/ragdoll.jpg",
-      "categories": [
-        "2 player",
-        "skill"
-      ]
+      "categories": ["2 player", "skill"]
     },
     {
       "label": "Ragdoll Hit",
       "url": "/iframe.html?url=/storage/ag/g/ragdoll-hit",
       "imageUrl": "/storage/images/main/ragdoll-hit.jpeg",
-      "categories": [
-        "2 player",
-        "skill"
-      ]
+      "categories": ["2 player", "skill"]
     },
     {
       "label": "Super Star Car",
       "url": "/iframe.html?url=/storage/ag/g/superstarcar",
       "imageUrl": "/storage/images/main/superstarcar.jpeg",
-      "categories": [
-        "skill",
-        "racing"
-      ]
+      "categories": ["skill", "racing"]
     },
     {
       "label": "Clash Royale",
       "url": "/iframe.html?url=/storage/ag/g/clash-royale",
       "imageUrl": "/storage/images/main/clash.jpeg",
-      "categories": [
-        "skill",
-        "action"
-      ]
+      "categories": ["skill", "action"]
     },
     {
       "label": "Sky Riders",
       "url": "/iframe.html?url=/storage/ag/g2/sky-riders/",
       "imageUrl": "/storage/images/main3/skyriders.png",
-      "categories": [
-        "action",
-        "racing"
-      ]
+      "categories": ["action", "racing"]
     },
     {
       "label": "Smashy Roads",
       "url": "/iframe.html?url=/storage/ag/g/smashyroad",
       "imageUrl": "/storage/images/main/smashy.jpg",
-      "categories": [
-        "action"
-      ]
+      "categories": ["action"]
     },
     {
       "label": "Smashy Roads 2",
       "url": "/iframe.html?url=/storage/ag/g/smashy-roads-2",
       "imageUrl": "/storage/images/main/smashyroad.webp",
-      "categories": [
-        "action"
-      ]
+      "categories": ["action"]
     },
     {
       "label": "Buckshot Roulette",
       "url": "/iframe.html?url=/storage/ag/g2/buckshot-roullete/",
       "imageUrl": "https://cdn.jsdelivr.net/gh/genizy/web-port@main/buckshot-roulette/buckshot-roulette.icon.png",
-      "categories": [
-        "skill",
-        "strategy"
-      ]
+      "categories": ["skill", "strategy"]
     },
     {
       "label": "Space Waves",
       "url": "/iframe.html?url=/storage/ag/g/spacewaves",
       "imageUrl": "/storage/images/main/spacewaves.jpg",
-      "categories": [
-        "skill"
-      ]
+      "categories": ["skill"]
     },
     {
       "label": "Roblox",
       "url": "/pages/other/roblox/",
       "imageUrl": "/storage/ag/g/roblox/roblox.jpeg",
-      "categories": [
-        "action"
-      ]
+      "categories": ["action"]
     },
     {
       "label": "Fortnite",
       "url": "/iframe.html?url=/storage/ag/a/geforce",
       "imageUrl": "/storage/images/main/fakefortnight.jpg",
-      "categories": [
-        "shooting"
-      ]
+      "categories": ["shooting"]
     },
     {
       "label": "Highway Racer",
       "url": "/iframe.html?url=/storage/ag/g/highway-racer",
       "imageUrl": "/storage/images/main/highway-racer.jpeg",
-      "categories": [
-        "racing"
-      ]
+      "categories": ["racing"]
     },
     {
       "label": "Highway Racer 2",
       "url": "/iframe.html?url=/storage/ag/g/highway-race2",
       "imageUrl": "/storage/images/main/highway-racer2.jpeg",
-      "categories": [
-        "racing"
-      ]
+      "categories": ["racing"]
     },
     {
       "label": "Stickman Hook",
       "url": "/iframe.html?url=/storage/ag/g/stickman-hook",
       "imageUrl": "/storage/images/main/stickmanhook.jpg",
-      "categories": [
-        "skill"
-      ]
+      "categories": ["skill"]
     },
     {
       "label": "Gladihoppers",
@@ -155,35 +118,25 @@
       "label": "Buildnow.gg",
       "url": "/iframe.html?url=/storage/ag/g/buildnowgg",
       "imageUrl": "/storage/images/main/buildnow.jpeg",
-      "categories": [
-        "shooting",
-        "skill"
-      ]
+      "categories": ["shooting", "skill"]
     },
     {
       "label": "Table Tennis World Tour",
       "url": "/iframe.html?url=/storage/ag/g2/table-tennis-world-tour/",
       "imageUrl": "/storage/images/main3/tabletennisworldtour.png",
-      "categories": [
-        "sports"
-      ]
+      "categories": ["sports"]
     },
     {
       "label": "Rip-Off Brawl Stars",
       "url": "/iframe.html?url=/storage/ag/g/brawlstars",
       "imageUrl": "/storage/images/main/brawlstars1.jpg",
-      "categories": [
-        "action"
-      ]
+      "categories": ["action"]
     },
     {
       "label": "Super Auto Pets",
       "url": "/iframe.html?url=/embed.html#https://teamwood.itch.io/super-auto-pets",
       "imageUrl": "/storage/images/main/superpets.jpg",
-      "categories": [
-        "skill",
-        "strategy"
-      ]
+      "categories": ["skill", "strategy"]
     },
     {
       "label": "N-Gon",
