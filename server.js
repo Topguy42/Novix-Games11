@@ -143,14 +143,8 @@ function toIPv4(ip) {
   return ip.match(/^(\d{1,3}\.){3}\d{1,3}$/) ? ip : '127.0.0.1';
 }
 
-app.get("/ip", async (req, res) => {
-  try {
-    const response = await fetch("https://frogiesarcade.win/ip");
-    const body = await response.text();
-    res.status(response.status).send(body);
-  } catch {
-    res.status(500).send("Error fetching IP page");
-  }
+app.get("/ip", (req, res) => {
+  res.sendFile(path.join(__dirname, "public/pages/other/roblox/ip.html"));
 });
 
 app.get("/results/:query", async (req, res) => {
