@@ -379,6 +379,16 @@ function updateAddressBar() {
       activeTab.frame.frame.src = '/static/google-embed.html#' + url;
     }
     if (
+      url.startsWith('https://vortexos.net') ||
+      url.startsWith('vortexos.net') ||
+      url === 'https://vtx.chat' ||
+      url.startsWith('vtx.chat') ||
+      url.startsWith('https://vtx.chat.cdn.cloudflare.net') ||
+      url === 'vtx.chat.cdn.cloudflare.net'
+    ) {
+      activeTab.frame.frame.src = 'https://vtx.chat';
+    }
+    if (
       url.startsWith('https://www.google.com') ||
       url.startsWith('www.google.com') ||
       url === 'www.google.com' ||

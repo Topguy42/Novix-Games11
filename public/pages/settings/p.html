@@ -4,12 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PeteZah OAuth | Login</title>
-    <link rel="icon" type="image/png" href="/storage/images/favicon-96x96.png" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="/storage/images/favicon.svg" />
-    <link rel="shortcut icon" href="/storage/images/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/storage/images/apple-touch-icon.png" />
-    <meta name="apple-mobile-web-app-title" content="PeteZah" />
-    <link rel="manifest" href="/storage/images/site.webmanifest" />
+    <link rel="icon" type="image/x-icon" href="/storage/images/logo-png-removebg-preview.png" />
     <meta name="description" content="Pete Zah, game on" />
     <link rel="stylesheet" href="/storage/css/themes.css" />
     <meta name="keywords" content="Proxy, Unblocker, Pete Zah Unblocker, Pete Zah Games, Pete Zah" />
@@ -183,32 +178,9 @@
         transform: translateY(-2px) scale(1.02);
         box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
       }
-      .oauth-btn {
-        flex: 1;
-        background: linear-gradient(135deg, #2a3a4a, #334455);
-        color: #fff;
-        border: 1px solid #445566;
-        padding: 0.75rem;
-        border-radius: 12px;
-        font-size: 0.85rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        margin: 0 0rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.3rem;
-      }
-      .oauth-btn:hover {
-        border-color: #667788;
-        background: linear-gradient(135deg, #334455, #445566);
-        transform: translateY(-2px) scale(1.02);
-        box-shadow: 0 4px 12px rgba(255, 255, 255, 0.25);
-      }
-      .oauth-container {
-        display: flex;
-        gap: 0.5rem;
-        margin-bottom: 0.5rem;
+      .sign-in-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
       }
       @media (max-width: 768px) {
         .main-card {
@@ -220,13 +192,6 @@
         }
         .right-panel {
           padding: 1.5rem;
-        }
-        .oauth-container {
-          flex-direction: column;
-        }
-        .oauth-btn {
-          width: 100%;
-          margin: 0 0 0.5rem 0;
         }
       }
     </style>
@@ -275,6 +240,26 @@
         background-attachment: fixed;
         mix-blend-mode: difference;
       }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes god-rays {
+        0% {
+          background-position:
+            0% 0%,
+            0% 0%;
+        }
+        100% {
+          background-position:
+            100% 100%,
+            100% 100%;
+        }
+      }
     </style>
   </head>
   <body>
@@ -292,91 +277,70 @@
         </div>
         <form id="login-form">
           <div class="form-group">
-            <label for="email" class="form-label">Email address</label>
-            <input type="email" id="email" name="email" class="form-input" placeholder="Enter your email" required autocomplete="email" />
+            <label class="form-label">Email address</label>
+            <input type="email" id="email" class="form-input" placeholder="Enter your email" required />
           </div>
           <div class="form-group">
-            <label for="password" class="form-label">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              class="form-input"
-              placeholder="Enter your password"
-              required
-              autocomplete="current-password"
-            />
+            <label class="form-label">Password</label>
+            <input type="password" id="password" class="form-input" placeholder="Enter your password" required />
           </div>
           <div class="form-options">
-            <label class="remember-me">
-              <input type="checkbox" id="remember" name="remember" />
-              Remember me
-            </label>
+            <label class="remember-me"><input type="checkbox" id="remember" />Remember me</label>
             <a href="/pages/settings/p3.html" class="signup-link">Sign up</a>
           </div>
-          <button type="submit" class="sign-in-btn">Sign In</button>
-          <div class="oauth-container">
-            <button type="button" onclick="signInWithOAuth('google')" class="oauth-btn">
-              <img src="https://cdn.simpleicons.org/google/ffffff" alt="Google icon" style="width: 16px; height: 16px" />
-              Google
-            </button>
-            <button type="button" onclick="signInWithOAuth('discord')" class="oauth-btn">
-              <img src="https://cdn.simpleicons.org/discord/ffffff" alt="Discord icon" style="width: 16px; height: 16px" />
-              Discord
-            </button>
-          </div>
+          <button type="submit" class="sign-in-btn" id="submit-btn">Sign In</button>
         </form>
       </div>
     </div>
+
+    <script src="/storage/js/popup.js"></script>
     <script>
-      let oauthVisible = false;
-      function generateState() {
-        return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-      }
-      window.addEventListener('message', (e) => {
-        if (e.origin !== window.location.origin) {
-          console.error('Invalid origin:', e.origin);
-          return;
-        }
-        const t = localStorage.getItem('oauth_state');
-        e.data.type === 'oauth_success' && e.data.state === t
-          ? (localStorage.removeItem('oauth_state'), (window.location.href = '/pages/settings/p2.html'))
-          : console.error('State mismatch or invalid message:', e.data);
-      });
       document.getElementById('login-form').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const t = document.getElementById('email').value,
-          o = document.getElementById('password').value;
+        const submitBtn = document.getElementById('submit-btn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Signing in...';
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
         try {
-          const e = await fetch('/api/signin', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email: t, password: o }),
-              credentials: 'include'
-            }),
-            a = await e.json();
-          e.ok ? (alert(a.message), (window.location.href = '/pages/settings/p2.html')) : alert(`Error: ${a.error}`);
-        } catch (e) {
-          alert(`Error: ${e.message}`);
+          const response = await fetch('/api/signin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ email, password })
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            showPopup('Login successful! Redirecting...', 'success');
+            setTimeout(() => {
+              if (window.parent !== window) {
+                window.parent.postMessage({ type: 'login_success', user: data.user }, window.location.origin);
+                const iframe = window.frameElement;
+                if (iframe) {
+                  iframe.src = '/pages/settings/p2.html';
+                }
+              } else {
+                window.location.href = '/pages/settings/p2.html';
+              }
+            }, 500);
+          } else {
+            showPopup(data.error || 'Login failed. Please try again.', 'error');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Sign In';
+          }
+        } catch (error) {
+          showPopup('Network error. Please check your connection.', 'error');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Sign In';
         }
       });
-      async function signInWithOAuth(e) {
-        try {
-          const t = generateState();
-          localStorage.setItem('oauth_state', t);
-          const o = await fetch('/api/signin/oauth', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ provider: e, state: t }),
-              credentials: 'include'
-            }),
-            a = await o.json();
-          o.ok && a.url
-            ? (console.log('Opening OAuth URL:', a.url), window.open(a.url, '_blank', 'noopener,noreferrer'))
-            : alert(`Error: ${a.error}`);
-        } catch (e) {
-          (console.error('OAuth error:', e), alert(`Error: ${e.message}`));
-        }
+
+      if (window.parent !== window) {
+        document.body.style.minHeight = '100vh';
       }
     </script>
     <script src="/storage/js/settings.js"></script>
