@@ -37,7 +37,9 @@ export async function adminUserActionHandler(req, res) {
     if (action === 'ban') {
       try {
         db.prepare('ALTER TABLE users ADD COLUMN banned INTEGER DEFAULT 0');
-      } catch (err) { console.error(err); }
+      } catch (err) {
+        console.error(err);
+      }
       db.prepare('UPDATE users SET banned = 1, email_verified = 0 WHERE id = ?').run(userId);
       return res.json({ message: 'User and IP banned.' });
     }

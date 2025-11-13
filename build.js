@@ -554,7 +554,7 @@ async function main() {
   await processInputVectors();
   // Setup sitemap paths
   const sitemapDir = path.join(__dirname);
-  const sitemapBasePath = path.join(sitemapDir, 'sitemap-base.json');
+  const sitemapBasePath = path.join(sitemapDir, '.sitemap-base.json');
   const sitemapCachePath = path.join(sitemapDir, '.sitemap-cache.json');
 
   // Load previous git cache if available

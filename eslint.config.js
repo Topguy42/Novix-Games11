@@ -20,7 +20,8 @@ export default defineConfig([
       }
     },
     rules: {
-      'css/use-baseline': 'off'
+      'css/use-baseline': 'off',
+      'no-unused-vars': ['warn', { varsIgnorePattern: '^_' }]
     }
   },
   {
@@ -72,12 +73,12 @@ export default defineConfig([
     ]
   },
   {
-    files: ['**/*sw.js'],
+    files: ['**/*sw.js', '**/uv.js'],
     languageOptions: {
       globals: {
         importScripts: 'readonly',
         serviceworker: true
       }
-    },
+    }
   }
 ]);

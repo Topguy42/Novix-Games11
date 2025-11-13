@@ -168,10 +168,6 @@ body::-webkit-scrollbar {
   background-color: rgb(0 0 0 / 90%);
 }
 
-.game-container {
-  gap: 30px;
-}
-
 .appImage {
   animation: fade-in-bottom 1s;
   opacity: 0;

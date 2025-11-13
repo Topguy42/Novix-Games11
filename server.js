@@ -6,19 +6,13 @@ import { createBareServer } from '@tomphttp/bare-server-node';
 import bcrypt from 'bcrypt';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import { randomUUID } from "crypto";
-import db from './server/db.js';
+import { randomUUID } from 'crypto';
 import dotenv from 'dotenv';
 import express from 'express';
 import fileUpload from 'express-fileupload';
 import rateLimit from 'express-rate-limit';
 import session from 'express-session';
 import fs from 'fs';
-import { signupHandler } from "./server/api/signup.js";
-import { signinHandler } from "./server/api/signin.js";
-import { adminUserActionHandler } from './server/api/admin-user-action.js';
-import { addCommentHandler, getCommentsHandler } from './server/api/comments.js';
-import { likeHandler, getLikesHandler } from './server/api/likes.js';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import { parseJSONC } from 'jsonc-parser';
 import NodeCache from 'node-cache';
@@ -27,6 +21,12 @@ import { createServer } from 'node:http';
 import { hostname } from 'node:os';
 import path, { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { adminUserActionHandler } from './server/api/admin-user-action.js';
+import { addCommentHandler, getCommentsHandler } from './server/api/comments.js';
+import { getLikesHandler, likeHandler } from './server/api/likes.js';
+import { signinHandler } from './server/api/signin.js';
+import { signupHandler } from './server/api/signup.js';
+import db from './server/db.js';
 
 const configRaw = fs.readFileSync('./config.jsonc', 'utf-8');
 const config = parseJSONC(configRaw);
@@ -187,7 +187,6 @@ app.use((req, res, next) => {
       pathRewrite: { '^/api/gn-math/html': '' }
     })
   );
-
 
   app.get('/ip', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/pages/other/roblox/ip.html'));
@@ -620,9 +619,7 @@ app.use((req, res, next) => {
   const handleUpgradeVerification = (req, socket, next) => {
     const verified = isVerified(req);
     const isWsBrowser = isBrowser(req);
-    console.log(
-      `WebSocket Upgrade Attempt: URL=${req.url}, Verified=${verified}, IsBrowser=${isWsBrowser}, Cookies=${req.headers.cookie || 'none'}`
-    );
+    console.log(`WebSocket Upgrade Attempt: URL=${req.url}, Verified=${verified}, IsBrowser=${isWsBrowser}, Cookies=${req.headers.cookie || 'none'}`);
     if (req.url.startsWith('/wisp/')) {
       return next();
     }

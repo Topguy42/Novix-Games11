@@ -118,8 +118,8 @@ body {
 .settings-container::before {
   border: 1px solid #0a1d37;
   border-radius: 22px;
-  inset: -2px;
   content: '';
+  inset: -2px;
   pointer-events: none;
   position: absolute;
   z-index: -1;
@@ -573,6 +573,5 @@ input[type='file']:focus::file-selector-button {
 }
 
 input[type='file'] {
-  appearance: none;
   appearance: none;
 }

@@ -160,8 +160,8 @@ img {
   background:
     radial-gradient(circle at 20% 20%, rgb(59 130 246 / 10%) 0%, transparent 50%),
     radial-gradient(circle at 80% 80%, rgb(139 92 246 / 10%) 0%, transparent 50%);
-  inset: 0;
   content: '';
+  inset: 0;
   pointer-events: none;
   position: absolute;
   z-index: 1;

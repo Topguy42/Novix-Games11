@@ -171,17 +171,10 @@ $RECYCLE.BIN/
 .LSOverride
 
 # 8. IDEs and tools
-.vscode/
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
 *.code-workspace
 .idea/
 
 # 9. Docker / Deploy secrets
-Dockerfile
-.dockerignore
 .docker/
 .docker-compose.override.yml
 .docker-compose.prod.yml
