@@ -72,7 +72,7 @@ If you would like to use one of the following buttons to deploy
 (Links with "(gg)" are unblocked by GoGuardian, others are untested)
 
 > [!IMPORTANT]
-> You can get more links in our [Discord Server](https://discord.gg/cYjHFDguxS)
+> You can get more links in our [Discord Server](https://discord.gg/unrestricted)
 
 ## Wildcard (replace the * with anything you want, for GoGuardian  using the keyword "math" is recommended. )
 
