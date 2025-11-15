@@ -18,7 +18,7 @@ You're mainly supposed to use our site at places that have restrictions.
 
 Our website is host to over 300k users!
 
-Links- You can visit [https://petezahgames.com](https://petezahgames.com), and you can get more links in our [Discord Server](https://discord.gg/cYjHFDguxS)
+Links- You can visit [https://petezahgames.com](https://petezahgames.com), and you can get more links in our [Discord Server](https://discord.gg/unrestricted)
 
 ## Deploying
 
@@ -72,7 +72,7 @@ If you would like to use one of the following buttons to deploy
 (Links with "(gg)" are unblocked by GoGuardian, others are untested)
 
 > [!IMPORTANT]
-> You can get more links in our [Discord Server](https://discord.gg/unrestricted)
+> You can get more links in our [Discord Server](https:///unrestricted)
 
 ## Wildcard (replace the * with anything you want, for GoGuardian  using the keyword "math" is recommended. )
 
