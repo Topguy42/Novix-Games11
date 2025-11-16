@@ -7,10 +7,10 @@
 
     <style>
       @font-face {
-        font-family: 'Inter';
-        src: url('images/Inter-Regular.woff2') format('woff2');
-        font-weight: 400;
+        font-family: Inter;
         font-style: normal;
+        font-weight: 400;
+        src: url('images/Inter-Regular.woff2') format('woff2');
       }
 
       * {
@@ -18,99 +18,102 @@
       }
 
       body {
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        font-family: 'Inter', Arial, Helvetica, sans-serif;
-        height: 100vh;
-        width: 100vw;
-        display: flex;
-        justify-content: center;
         align-items: center;
-        color: #d0eaff;
+        animation: bgShift 20s ease-in-out infinite;
         background: radial-gradient(circle at center, #001b33 0%, #000814 100%);
         background-size: 200% 200%;
-        animation: bgShift 20s ease-in-out infinite;
+        color: #d0eaff;
+        display: flex;
+        font-family: Inter, Arial, Helvetica, sans-serif;
+        height: 100vh;
+        justify-content: center;
+        margin: 0;
+        overflow: hidden;
+        padding: 0;
         position: relative;
+        width: 100vw;
       }
 
       @keyframes bgShift {
         0% {
           background-position: 0% 50%;
         }
+
         50% {
           background-position: 100% 50%;
         }
+
         100% {
           background-position: 0% 50%;
         }
       }
 
       #main {
+        align-items: center;
         display: flex;
         flex-direction: column;
-        align-items: center;
-        z-index: 2;
         text-align: center;
+        z-index: 2;
       }
 
       .spinner {
-        width: 140px;
-        height: 140px;
-        position: relative;
-        margin-bottom: 20px;
         filter: drop-shadow(0 0 12px #00bfff);
+        height: 140px;
+        margin-bottom: 20px;
+        position: relative;
+        width: 140px;
       }
 
       .spinner-circle {
-        position: absolute;
+        animation: spin 1.8s linear infinite;
         border: 8px solid transparent;
         border-radius: 50%;
-        animation: spin 1.8s linear infinite;
+        position: absolute;
       }
 
       .spinner-circle:nth-child(1) {
-        width: 100%;
-        height: 100%;
-        border-top-color: #00bfff;
         border-left-color: #0074d9;
+        border-top-color: #00bfff;
+        height: 100%;
+        width: 100%;
       }
 
       .spinner-circle:nth-child(2) {
-        width: 72%;
-        height: 72%;
-        top: 14%;
-        left: 14%;
-        border-top-color: #003366;
-        border-left-color: #0055aa;
-        animation-duration: 2.5s;
         animation-direction: reverse;
+        animation-duration: 2.5s;
+        border-left-color: #05a;
+        border-top-color: #036;
+        height: 72%;
+        left: 14%;
+        top: 14%;
+        width: 72%;
       }
 
       @keyframes spin {
         from {
           transform: rotate(0deg);
         }
+
         to {
           transform: rotate(360deg);
         }
       }
 
       #glitch-text {
+        animation:
+          glowPulse 2s ease-in-out infinite,
+          bounce 3s ease-in-out infinite;
+        color: #d0eaff;
         font-size: 36px;
         font-weight: 700;
         letter-spacing: 4px;
-        text-transform: uppercase;
-        color: #d0eaff;
         margin-top: 30px;
         text-shadow:
           0 0 10px #00bfff,
           0 0 20px #0074d9,
-          0 0 30px #0055aa,
-          0 0 50px #003366;
-        animation:
-          glowPulse 2s ease-in-out infinite,
-          bounce 3s ease-in-out infinite;
+          0 0 30px #05a,
+          0 0 50px #036;
+        text-transform: uppercase;
       }
 
       @keyframes glowPulse {
@@ -118,22 +121,24 @@
           text-shadow:
             0 0 6px #00bfff,
             0 0 12px #0074d9,
-            0 0 18px #0055aa,
-            0 0 30px #003366;
+            0 0 18px #05a,
+            0 0 30px #036;
         }
+
         50% {
           text-shadow:
             0 0 20px #00d5ff,
             0 0 30px #0094ff,
-            0 0 40px #0077cc,
-            0 0 60px #004488;
+            0 0 40px #07c,
+            0 0 60px #048;
         }
+
         100% {
           text-shadow:
             0 0 6px #00bfff,
             0 0 12px #0074d9,
-            0 0 18px #0055aa,
-            0 0 30px #003366;
+            0 0 18px #05a,
+            0 0 30px #036;
         }
       }
 
@@ -142,25 +147,26 @@
         100% {
           transform: translateY(0);
         }
+
         50% {
           transform: translateY(-5px);
         }
       }
 
       .shadow-layer {
+        background: radial-gradient(ellipse at center, rgb(0 10 30 / 60%), rgb(0 0 0 / 95%));
+        height: 100vh;
         position: absolute;
         width: 100vw;
-        height: 100vh;
-        background: radial-gradient(ellipse at center, rgba(0, 10, 30, 0.6), rgba(0, 0, 0, 0.95));
         z-index: 0;
       }
 
       .stars {
+        background: transparent url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
+        height: 100%;
+        opacity: 0.08;
         position: absolute;
         width: 100%;
-        height: 100%;
-        background: transparent url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
-        opacity: 0.08;
         z-index: 0;
       }
     </style>

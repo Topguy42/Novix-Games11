@@ -13,247 +13,280 @@
     <script type="text/javascript" src="//pl27983175.effectivegatecpm.com/c1/07/27/c10727dadb32856a5f427df5cc7f44ab.js"></script>
     <style>
       body {
-        background: #0a1d37;
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
         align-items: center;
-        font-family: 'Roboto', sans-serif;
+        background: #0a1d37;
         color: #fff;
+        display: flex;
+        font-family: Roboto, sans-serif;
+        justify-content: center;
         margin: 0;
+        min-height: 100vh;
         padding: 1rem;
       }
+
       .main-card {
         background: linear-gradient(135deg, #111117, #182129);
+        border: 1px solid #3a4a5a;
         border-radius: 24px;
-        width: 100%;
-        max-width: 440px;
-        height: 500px;
+        box-shadow: 0 12px 25px rgb(0 0 0 / 70%);
         display: flex;
         flex-direction: column;
+        height: 500px;
+        max-width: 440px;
         overflow: hidden;
-        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.7);
-        border: 1px solid #3a4a5a;
+        width: 100%;
       }
+
       .left-panel {
-        height: 160px;
         background-image: url('bg_alt.jpeg');
-        background-size: cover;
         background-position: center;
+        background-size: cover;
+        height: 160px;
       }
+
       .right-panel {
-        padding: 2rem;
         display: flex;
         flex-direction: column;
         justify-content: center;
+        padding: 2rem;
       }
+
       .header {
-        text-align: left;
         margin-bottom: 1rem;
+        text-align: left;
       }
+
       .brand {
-        display: flex;
         align-items: center;
-        gap: 0.5rem;
+        color: #fff;
+        display: flex;
         font-size: 1rem;
         font-weight: 500;
-        color: #fff;
+        gap: 0.5rem;
         margin-bottom: 1rem;
       }
+
       .moon-icon {
-        width: 18px;
-        height: 18px;
         background: #fff;
         border-radius: 50%;
+        height: 18px;
         position: relative;
+        width: 18px;
       }
+
       .moon-icon::after {
-        content: '';
-        position: absolute;
-        top: 3px;
-        right: 3px;
-        width: 12px;
-        height: 12px;
         background: #1e1e2d;
         border-radius: 50%;
+        content: '';
+        height: 12px;
+        position: absolute;
+        right: 3px;
+        top: 3px;
+        width: 12px;
       }
+
       .welcome-title {
+        color: #fff;
         font-size: 1.75rem;
         font-weight: 600;
-        margin: 0 0 0.25rem 0;
-        color: #fff;
-        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        margin: 0 0 0.25rem;
+        text-shadow: 0 1px 3px rgb(0 0 0 / 50%);
       }
+
       .welcome-subtitle {
-        color: #99aabb;
+        color: #9ab;
         font-size: 0.9rem;
-        margin: 0 0 1rem 0;
+        margin: 0 0 1rem;
       }
+
       .form-group {
         margin-bottom: 1rem;
       }
+
       .form-label {
+        color: #cde;
         display: block;
-        color: #ccddee;
         font-size: 0.85rem;
-        margin-bottom: 0.25rem;
         font-weight: 500;
+        margin-bottom: 0.25rem;
       }
+
       .form-input {
-        width: 100%;
         background: transparent;
         border: none;
-        border-bottom: 1px solid #445566;
+        border-bottom: 1px solid #456;
         color: #fff;
-        padding: 0.5rem 0;
         font-size: 0.95rem;
         outline: none;
+        padding: 0.5rem 0;
         transition: border-color 0.3s ease;
+        width: 100%;
       }
+
       .form-input:focus {
         border-bottom-color: #fff;
-        box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
+        box-shadow: 0 2px 5px rgb(255 255 255 / 10%);
       }
+
       .form-input::placeholder {
-        color: #667788;
+        color: #678;
       }
+
       .form-options {
-        display: flex;
-        justify-content: space-between;
         align-items: center;
-        margin: 1rem 0;
+        display: flex;
         font-size: 0.85rem;
+        justify-content: space-between;
+        margin: 1rem 0;
       }
+
       .remember-me {
-        display: flex;
         align-items: center;
+        color: #cde;
+        display: flex;
         gap: 0.25rem;
-        color: #ccddee;
       }
+
       .remember-me input {
-        width: 16px;
-        height: 16px;
         appearance: none;
-        background: #334455;
-        border: 2px solid #556677;
+        background: #345;
+        border: 2px solid #567;
         border-radius: 50%;
         cursor: pointer;
+        height: 16px;
         position: relative;
+        width: 16px;
       }
+
       .remember-me input:checked {
-        background: linear-gradient(135deg, #667788, #8899aa);
+        background: linear-gradient(135deg, #678, #89a);
       }
+
       .remember-me input:checked::after {
-        content: '✔';
         color: #fff;
+        content: '✔';
         font-size: 0.9rem;
+        left: 50%;
         position: absolute;
         top: 50%;
-        left: 50%;
         transform: translate(-50%, -50%);
       }
+
       .signup-link {
-        color: #ccddee;
+        color: #cde;
         text-decoration: none;
         transition: color 0.3s ease;
       }
+
       .signup-link:hover {
         color: #fff;
       }
+
       .sign-in-btn {
-        width: 100%;
         background: linear-gradient(135deg, #fff, #f0f0f0);
-        color: #0a1d37;
         border: none;
-        padding: 0.75rem;
         border-radius: 16px;
+        color: #0a1d37;
+        cursor: pointer;
         font-size: 0.95rem;
         font-weight: 500;
-        cursor: pointer;
-        transition: all 0.3s ease;
         margin-bottom: 0.75rem;
+        padding: 0.75rem;
+        transition: all 0.3s ease;
+        width: 100%;
       }
+
       .sign-in-btn:hover {
         background: linear-gradient(135deg, #f0f0f0, #ddd);
+        box-shadow: 0 5px 15px rgb(255 255 255 / 30%);
         transform: translateY(-2px) scale(1.02);
-        box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
       }
+
       .sign-in-btn:disabled {
-        opacity: 0.6;
         cursor: not-allowed;
+        opacity: 0.6;
       }
-      @media (max-width: 768px) {
+
+      @media (width <= 768px) {
         .main-card {
-          max-width: 400px;
           height: 480px;
+          max-width: 400px;
         }
+
         .left-panel {
           height: 140px;
         }
+
         .right-panel {
           padding: 1.5rem;
         }
       }
+
     </style>
     <style>
       .god-rays {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 550px;
         --stripes: repeating-linear-gradient(
           100deg,
-          rgba(20, 40, 60, 0.8) 0%,
-          rgba(20, 40, 60, 0.8) 7%,
+          rgb(20 40 60 / 80%) 0%,
+          rgb(20 40 60 / 80%) 7%,
           transparent 10%,
           transparent 12%,
-          rgba(20, 40, 60, 0.8) 16%
+          rgb(20 40 60 / 80%) 16%
         );
         --rays: repeating-linear-gradient(
           100deg,
-          rgba(30, 50, 90, 0.9) 10%,
-          rgba(20, 40, 80, 0.9) 15%,
-          rgba(30, 50, 90, 0.9) 20%,
-          rgba(20, 40, 80, 0.9) 25%,
-          rgba(30, 50, 90, 0.9) 30%
+          rgb(30 50 90 / 90%) 10%,
+          rgb(20 40 80 / 90%) 15%,
+          rgb(30 50 90 / 90%) 20%,
+          rgb(20 40 80 / 90%) 25%,
+          rgb(30 50 90 / 90%) 30%
         );
+
+        animation: fadeIn 2s ease;
         background-image: var(--stripes), var(--rays);
-        background-size: 300%, 200%;
         background-position:
           50% 50%,
           50% 50%;
-        animation: fadeIn 2s ease;
-        mask-image: radial-gradient(ellipse at 100% 0%, rgba(255, 255, 255, 0) 40%, transparent 70%);
-        -webkit-mask-image: radial-gradient(ellipse at 100% 0%, white 40%, transparent 70%);
+        background-size: 300%, 200%;
+        height: 550px;
+        left: 0;
+        mask-image: radial-gradient(ellipse at 100% 0%, white 40%, transparent 70%);
+        mask-image: radial-gradient(ellipse at 100% 0%, rgb(255 255 255 / 0%) 40%, transparent 70%);
         pointer-events: none;
+        position: fixed;
+        top: 0;
+        width: 100%;
         z-index: -1;
       }
 
       .god-rays::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background-image: var(--stripes), var(--rays);
-        background-size: 200%, 100%;
         animation: god-rays 40s linear infinite;
         background-attachment: fixed;
+        background-image: var(--stripes), var(--rays);
+        background-size: 200%, 100%;
+        content: '';
+        inset: 0;
         mix-blend-mode: difference;
+        position: absolute;
       }
+
       @keyframes fadeIn {
         from {
           opacity: 0;
         }
+
         to {
           opacity: 1;
         }
       }
+
       @keyframes god-rays {
         0% {
           background-position:
             0% 0%,
             0% 0%;
         }
+
         100% {
           background-position:
             100% 100%,

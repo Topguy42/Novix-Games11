@@ -44,146 +44,147 @@
       @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
       body {
-        display: flex;
-        justify-content: center;
         align-items: flex-start;
-        height: 100vh;
-        margin: 0;
         background-color: #0a1d37;
         color: white;
-        font-family: 'Poppins', sans-serif;
-        padding: 20px 0;
+        display: flex;
+        font-family: Poppins, sans-serif;
+        height: 100vh;
+        justify-content: center;
+        margin: 0;
         overflow: hidden;
+        padding: 20px 0;
       }
 
       .god-rays {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 550px;
         --stripes: repeating-linear-gradient(
           100deg,
-          rgba(20, 40, 60, 0.8) 0%,
-          rgba(20, 40, 60, 0.8) 7%,
+          rgb(20 40 60 / 80%) 0%,
+          rgb(20 40 60 / 80%) 7%,
           transparent 10%,
           transparent 12%,
-          rgba(20, 40, 60, 0.8) 16%
+          rgb(20 40 60 / 80%) 16%
         );
         --rays: repeating-linear-gradient(
           100deg,
-          rgba(30, 50, 90, 0.9) 10%,
-          rgba(20, 40, 80, 0.9) 15%,
-          rgba(30, 50, 90, 0.9) 20%,
-          rgba(20, 40, 80, 0.9) 25%,
-          rgba(30, 50, 90, 0.9) 30%
+          rgb(30 50 90 / 90%) 10%,
+          rgb(20 40 80 / 90%) 15%,
+          rgb(30 50 90 / 90%) 20%,
+          rgb(20 40 80 / 90%) 25%,
+          rgb(30 50 90 / 90%) 30%
         );
+
+        animation: fadeIn 2s ease;
         background-image: var(--stripes), var(--rays);
-        background-size: 300%, 200%;
         background-position:
           50% 50%,
           50% 50%;
-        animation: fadeIn 2s ease;
-        mask-image: radial-gradient(ellipse at 100% 0%, rgba(255, 255, 255, 0) 40%, transparent 70%);
-        -webkit-mask-image: radial-gradient(ellipse at 100% 0%, white 40%, transparent 70%);
+        background-size: 300%, 200%;
+        height: 550px;
+        left: 0;
+        mask-image: radial-gradient(ellipse at 100% 0%, white 40%, transparent 70%);
+        mask-image: radial-gradient(ellipse at 100% 0%, rgb(255 255 255 / 0%) 40%, transparent 70%);
         pointer-events: none;
+        position: fixed;
+        top: 0;
+        width: 100%;
         z-index: -1;
       }
 
       .god-rays::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background-image: var(--stripes), var(--rays);
-        background-size: 200%, 100%;
         animation: god-rays 40s linear infinite;
         background-attachment: fixed;
+        background-image: var(--stripes), var(--rays);
+        background-size: 200%, 100%;
+        content: '';
+        inset: 0;
         mix-blend-mode: difference;
+        position: absolute;
       }
 
       h1 {
+        color: #fff;
         font-size: 22px;
         font-weight: 600;
-        margin-bottom: 16px;
-        color: #ffffff;
-        text-transform: uppercase;
         letter-spacing: 1px;
-        text-shadow: 0px 4px 10px rgba(255, 255, 255, 0.15);
-        width: 100%;
+        margin-bottom: 16px;
         text-align: center;
+        text-shadow: 0 4px 10px rgb(255 255 255 / 15%);
+        text-transform: uppercase;
+        width: 100%;
       }
 
       .image-shuffler {
+        align-items: center;
+        background-color: #0a1d37;
+        border: 2px solid #fff;
+        border-radius: 12px;
+        box-shadow: 0 12px 35px rgb(255 255 255 / 20%);
         display: flex;
         flex-direction: column;
-        align-items: center;
-        width: 60%;
+        margin: 0 auto;
         max-width: 800px;
-        border-radius: 12px;
-        background-color: #0a1d37;
         padding: 14px;
         position: relative;
-        box-shadow: 0 12px 35px rgba(255, 255, 255, 0.2);
-        margin: 0 auto;
-        border: 2px solid #ffffff;
+        width: 60%;
       }
 
       .carousel-container {
+        overflow: hidden;
         position: relative;
         width: 100%;
-        overflow: hidden;
       }
 
       .carousel-track {
-        display: flex;
-        transition: transform 0.5s ease;
-        gap: 8px;
         align-items: center;
+        display: flex;
+        gap: 8px;
+        transition: transform 0.5s ease;
       }
 
       .carousel-item {
-        flex: 0 0 auto;
-        cursor: pointer;
-        transition: all 0.3s ease;
         border-radius: 8px;
+        cursor: pointer;
+        flex: 0 0 auto;
+        height: 80px;
         overflow: hidden;
         position: relative;
+        transition: all 0.3s ease;
         width: 120px;
-        height: 80px;
       }
 
       .carousel-item:hover {
+        box-shadow: 0 8px 20px rgb(255 255 255 / 30%);
         transform: scale(1.05);
         z-index: 2;
-        box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
       }
 
       .image {
-        width: 100%;
+        border-radius: 8px;
         height: 100%;
         object-fit: cover;
-        border-radius: 8px;
         transition:
           transform 0.3s,
           box-shadow 0.3s,
           filter 0.3s;
+        width: 100%;
       }
 
       .carousel-item-overlay {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: linear-gradient(transparent, rgba(10, 29, 55, 0.8));
-        color: white;
-        padding: 6px 0;
+        background: linear-gradient(transparent, rgb(10 29 55 / 80%));
         border-radius: 0 0 8px 8px;
-        text-align: center;
+        bottom: 0;
+        box-shadow: 0 3px 8px rgb(255 255 255 / 10%);
+        color: white;
         font-size: 12px;
         font-weight: 600;
+        left: 0;
         letter-spacing: 0.5px;
-        box-shadow: 0 3px 8px rgba(255, 255, 255, 0.1);
         opacity: 0;
+        padding: 6px 0;
+        position: absolute;
+        right: 0;
+        text-align: center;
         transition: opacity 0.3s ease-in-out;
       }
 
@@ -192,25 +193,25 @@
       }
 
       .carousel-btn {
+        align-items: center;
+        background: rgb(10 29 55 / 70%);
+        border: none;
+        border-radius: 50%;
+        color: white;
+        cursor: pointer;
+        display: flex;
+        height: 40px;
+        justify-content: center;
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
-        background: rgba(10, 29, 55, 0.7);
-        border: none;
-        color: white;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
         transition: all 0.3s ease;
+        width: 40px;
         z-index: 3;
       }
 
       .carousel-btn:hover {
-        background: rgba(10, 29, 55, 0.9);
+        background: rgb(10 29 55 / 90%);
         transform: translateY(-50%) scale(1.1);
       }
 
@@ -224,18 +225,18 @@
 
       .carousel-dots {
         display: flex;
-        justify-content: center;
         gap: 0.5rem;
+        justify-content: center;
         margin-top: 8px;
       }
 
       .carousel-dot {
-        width: 8px;
-        height: 8px;
+        background: rgb(255 255 255 / 30%);
         border-radius: 50%;
-        background: rgba(255, 255, 255, 0.3);
         cursor: pointer;
+        height: 8px;
         transition: all 0.3s ease;
+        width: 8px;
       }
 
       .carousel-dot.active {
@@ -244,28 +245,28 @@
       }
 
       .welcome-section {
-        position: absolute;
-        top: 50%;
-        left: 10%;
-        transform: translateY(-50%);
         color: white;
+        font-family: Poppins, sans-serif;
+        left: 10%;
+        position: absolute;
         text-align: left;
-        font-family: 'Poppins', sans-serif;
+        top: 50%;
+        transform: translateY(-50%);
         z-index: 10;
       }
 
       .welcome-section h2 {
+        color: #fff;
         font-size: 40px;
         font-weight: 700;
         margin-bottom: 10px;
-        color: #ffffff;
-        text-shadow: 0px 4px 10px rgba(255, 255, 255, 0.2);
+        text-shadow: 0 4px 10px rgb(255 255 255 / 20%);
       }
 
       .welcome-section p {
+        color: #dcdcdc;
         font-size: 18px;
         font-weight: 400;
-        color: #dcdcdc;
         margin-bottom: 20px;
       }
 
@@ -274,29 +275,29 @@
       }
 
       .shiny-btn {
-        position: relative;
-        margin: 0;
-        outline: none;
-        text-decoration: none;
-        display: flex;
-        justify-content: center;
         align-items: center;
-        cursor: pointer;
-        text-transform: uppercase;
         background-color: #3c5b8e;
         border-radius: 10px;
         color: #fff;
-        font-weight: 400;
+        cursor: pointer;
+        display: flex;
         font-family: inherit;
-        z-index: 0;
+        font-weight: 400;
+        justify-content: center;
+        margin: 0;
+        outline: none;
         overflow: hidden;
+        position: relative;
+        text-decoration: none;
+        text-transform: uppercase;
         transition: all 0.3s cubic-bezier(0.02, 0.01, 0.47, 1);
+        z-index: 0;
       }
 
       .shiny-btn:hover {
         background-color: #2a3c5f;
+        box-shadow: 0 5px 12px rgb(255 255 255 / 40%);
         transform: scale(1.05);
-        box-shadow: 0 5px 12px rgba(255, 255, 255, 0.4);
       }
 
       .shiny-btn span {
@@ -307,7 +308,7 @@
         z-index: 20;
       }
 
-      .shiny-btn:after {
+      .shiny-btn::after {
         background: #fff;
         content: '';
         height: 155px;
@@ -330,7 +331,7 @@
         animation-delay: 0.06s;
       }
 
-      .shiny-btn:hover:after {
+      .shiny-btn:hover::after {
         left: 120%;
         transition: all 550ms cubic-bezier(0.19, 1, 0.22, 1);
       }
@@ -380,75 +381,75 @@
       }
 
       .large-image-container {
-        position: absolute;
-        top: 30%;
-        right: 200px;
-        transform: translateY(-50%);
-        text-align: center;
-        z-index: 5;
-        padding: 20px;
-        border-radius: 12px;
-        background: rgba(0, 0, 0, 0.5);
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
         animation: slideInFromRight 0.8s ease-out forwards;
         animation-delay: 0.4s;
-        opacity: 0;
+        background: rgb(0 0 0 / 50%);
+        border-radius: 12px;
+        box-shadow: 0 15px 30px rgb(0 0 0 / 60%);
         cursor: pointer;
+        opacity: 0;
+        padding: 20px;
+        position: absolute;
+        right: 200px;
+        text-align: center;
+        top: 30%;
+        transform: translateY(-50%);
+        z-index: 5;
       }
 
       .large-image-container:hover {
+        box-shadow: 0 20px 50px rgb(0 0 0 / 80%);
         transform: translateY(-50%) scale(1.05);
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
       }
 
       .large-image {
-        height: 200px;
-        width: auto;
-        border: 5px solid #ffffff;
+        border: 5px solid #fff;
         border-radius: 12px;
-        box-shadow: 0 12px 35px rgba(255, 255, 255, 0.3);
+        box-shadow: 0 12px 35px rgb(255 255 255 / 30%);
+        height: 200px;
         transition:
           transform 0.3s ease,
           box-shadow 0.3s ease;
+        width: auto;
       }
 
       .large-image:hover {
+        box-shadow: 0 15px 40px rgb(255 255 255 / 60%);
         transform: scale(1.1);
-        box-shadow: 0 15px 40px rgba(255, 255, 255, 0.6);
       }
 
       .large-image-caption {
-        margin-top: 10px;
-        color: #fff;
-        font-weight: 600;
-        font-size: 18px;
-        background: rgba(10, 29, 55, 0.8);
-        padding: 8px;
+        background: rgb(10 29 55 / 80%);
         border-radius: 8px;
+        color: #fff;
+        font-size: 18px;
+        font-weight: 600;
+        margin-top: 10px;
+        padding: 8px;
       }
 
       .popup {
+        align-items: center;
+        background-color: rgb(0 0 0 / 50%);
         display: none;
+        height: 100%;
+        justify-content: center;
+        left: 0;
         position: fixed;
         top: 0;
-        left: 0;
         width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        justify-content: center;
-        align-items: center;
         z-index: 1000;
       }
 
       .popup-content {
         background-color: #1e1e2d;
-        padding: 20px;
         border-radius: 10px;
+        color: white;
+        padding: 20px;
+        position: relative;
+        text-align: center;
         width: 300px;
         z-index: 11;
-        text-align: center;
-        color: white;
-        position: relative;
       }
 
       .popup h2 {
@@ -462,57 +463,57 @@
       }
 
       .discord-btn {
-        display: flex;
-        padding: 10px 20px;
-        justify-content: center;
         align-items: center;
-        color: white;
-        text-decoration: none;
         border-radius: 8px;
+        color: white;
+        display: flex;
+        justify-content: center;
+        padding: 10px 20px;
+        text-decoration: none;
         transition: background-color 0.3s ease;
       }
 
       .close-btn {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-size: 24px;
-        cursor: pointer;
-        color: white;
-        background-color: #ff0000;
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        display: flex;
         align-items: center;
+        background-color: #f00;
+        border-radius: 50%;
+        color: white;
+        cursor: pointer;
+        display: flex;
+        font-size: 24px;
+        height: 30px;
         justify-content: center;
         line-height: 1;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        width: 30px;
       }
 
       .info-box {
-        position: fixed;
-        bottom: 20px;
-        left: 20px;
         background-color: #1e1e2d;
-        color: white;
-        padding: 8px 12px;
         border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
-        z-index: 999;
+        bottom: 20px;
+        box-shadow: 0 4px 12px rgb(255 255 255 / 20%);
+        color: white;
         font-size: 12px;
+        left: 20px;
+        padding: 8px 12px;
+        position: fixed;
         width: 103px;
+        z-index: 999;
       }
 
       .info-row {
-        display: flex;
         align-items: center;
+        display: flex;
         justify-content: space-between;
         margin-bottom: 4px;
       }
 
       #battery-display {
-        display: flex;
         align-items: center;
+        display: flex;
       }
 
       #fps {
@@ -520,16 +521,16 @@
       }
 
       .discord-btn-two {
-        display: block;
         background-color: #3c5b8e;
-        padding: 6px;
-        color: white;
-        text-decoration: none;
         border-radius: 6px;
-        margin-top: 8px;
-        text-align: center;
-        transition: background-color 0.3s ease;
+        color: white;
+        display: block;
         font-size: 12px;
+        margin-top: 8px;
+        padding: 6px;
+        text-align: center;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
       }
 
       .discord-btn-two:hover {
@@ -537,8 +538,8 @@
       }
 
       .battery-container {
-        display: inline-flex;
         align-items: center;
+        display: inline-flex;
         margin-right: 5px;
         vertical-align: middle;
       }
@@ -567,6 +568,7 @@
         from {
           opacity: 0;
         }
+
         to {
           opacity: 1;
         }
@@ -574,23 +576,25 @@
 
       @keyframes slideInUp {
         from {
-          transform: translateY(50px);
           opacity: 0;
+          transform: translateY(50px);
         }
+
         to {
-          transform: translateY(0);
           opacity: 1;
+          transform: translateY(0);
         }
       }
 
       @keyframes slideInFromRight {
         from {
-          transform: translateX(100px);
           opacity: 0;
+          transform: translateX(100px);
         }
+
         to {
-          transform: translateX(0);
           opacity: 1;
+          transform: translateX(0);
         }
       }
 
@@ -611,29 +615,29 @@
       }
 
       .social-media-icon-container {
-        background-color: #112c69;
-        display: flex;
-        justify-content: center;
         align-items: center;
+        background-color: #112c69;
+        border-radius: 8px;
+        display: flex;
         height: 30px;
-        width: 30px;
+        justify-content: center;
         margin: 4px;
         margin-top: 15px;
-        border-radius: 8px;
         transition: all 0.3s ease;
+        width: 30px;
       }
 
       .social-media-icon-container-2 {
-        background-color: #112c69;
-        display: flex;
-        justify-content: center;
         align-items: center;
+        background-color: #112c69;
+        border-radius: 8px;
+        display: flex;
         height: 50px;
-        width: 50px;
+        justify-content: center;
         margin: 8px;
         margin-top: 15px;
-        border-radius: 8px;
         transition: all 0.3s ease;
+        width: 50px;
       }
 
       .social-media-tray {

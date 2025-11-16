@@ -70,7 +70,9 @@ things to know:
 - Most routes are in the `/public/` folder (especially pages)
 - If you need to find the exact route of a page use dev tools to find the
   iFrame's source:
-  <img width="411" height="39" alt="image" src="https://github.com/user-attachments/assets/00cf72ab-3d9b-463a-bb53-dd755f82b9f7" />
+
+  ![Inspect Element image](https://github.com/user-attachments/assets/00cf72ab-3d9b-463a-bb53-dd755f82b9f7)
+
 - Yes, we know using an iFrame for the entire site is horrible practice. We're
   working on it.
 - We use SQLite as our database

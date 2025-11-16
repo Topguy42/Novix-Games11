@@ -1,0 +1,13 @@
+*.yml
+.*
+!.env
+!.env.*
+stylelint*
+.vscode/
+.idea/
+replit.nix
+*.md
+LICENSE
+!.sitemap*
+Dockerfile
+

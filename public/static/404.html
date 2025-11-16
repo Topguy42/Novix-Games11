@@ -29,34 +29,34 @@
     <style>
       /* Set background color for body */
       body {
-        background-color: #0b1d3b; /* Dark blue background */
-        height: 100vh;
-        margin: 0;
-        display: flex;
-        justify-content: center;
         align-items: center;
+        background-color: #0b1d3b; /* Dark blue background */
+        display: flex;
         font-family: Arial, sans-serif;
+        height: 100vh;
+        justify-content: center;
+        margin: 0;
       }
 
       /* Container for the loading screen */
       .loading-container {
-        text-align: center;
-        color: white; /* White text */
+        background-color: rgb(11 29 59 / 80%); /* Dark blue with transparency */
         border: 3px solid #fff; /* White border */
-        padding: 30px;
         border-radius: 10px;
-        background-color: rgba(11, 29, 59, 0.8); /* Dark blue with transparency */
+        color: white; /* White text */
+        padding: 30px;
+        text-align: center;
       }
 
       /* Styling for the spinner */
       .spinner {
-        border: 5px solid rgba(255, 255, 255, 0.3); /* Light border */
-        border-top: 5px solid #fff; /* White border at the top */
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
         animation: spin 1s linear infinite;
+        border: 5px solid rgb(255 255 255 / 30%); /* Light border */
+        border-radius: 50%;
+        border-top: 5px solid #fff; /* White border at the top */
+        height: 50px;
         margin-bottom: 20px;
+        width: 50px;
       }
 
       /* Keyframes for spinner animation */
@@ -64,6 +64,7 @@
         0% {
           transform: rotate(0deg);
         }
+
         100% {
           transform: rotate(360deg);
         }

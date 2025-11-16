@@ -1,4 +1,3 @@
-/*global UVServiceWorker,__uv$config*/
 /*
  * Stock service worker script.
  * Users can provide their own sw.js if they need to extend the functionality of the service worker.

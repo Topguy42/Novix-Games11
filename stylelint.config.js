@@ -25,10 +25,14 @@ export default {
         ignoreProperties: ['backdrop-filter', 'mask-image', 'scrollbar-width']
       }
     ],
-    'selector-pseudo-element-no-unknown': [
-      true,
+    overrides: [
       {
-        ignorePseudoElements: ['-webkit-scrollbar', 'v-deep']
+        files: ["**/*.html"],
+        customSyntax: "postcss-html"      // parse inline <style> and style=""
+      },
+      {
+        files: ["**/*.{js,jsx,ts,tsx}"],
+        customSyntax: "postcss-jsx"      // parse styled-components and emotion css-in-js
       }
     ]
   }

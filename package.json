@@ -11,12 +11,14 @@
   "scripts": {
     "install:deps": "node install.js",
     "start": "node server.js",
-    "lint": "pnpm exec eslint . --fix --cache && pnpm exec stylelint \"**/*.css\" --fix",
+    "lint": "pnpm exec eslint . --fix --cache & pnpm exec stylelint \"**/*.css\" --fix",
+    "lint:check": "pnpm exec eslint . --cache & pnpm exec stylelint \"**/*.{css,html,js,jsx,ts,tsx}\"",
     "lint:scripts": "pnpm exec eslint . --fix --cache",
-    "lint:styles": "pnpm exec stylelint \"**/*.css\" --fix",
+    "lint:styles": "pnpm exec stylelint \"**/*.{css,html,js,jsx,ts,tsx}\" --fix",
     "format": "pnpm exec prettier --write .",
     "build": "node build.js",
-    "build:debug": "node build.js --env=debug"
+    "build:debug": "node build.js --env=debug",
+    "prepare": "husky"
   },
   "dependencies": {
     "@isomorphic-git/lightning-fs": "^4.6.2",
@@ -43,12 +45,15 @@
     "p-limit": "^7.2.0",
     "proper-lockfile": "^4.1.2",
     "sharp": "^0.33.5",
+    "utf-8-validate": "^5.0.10",
     "wisp-server-node": "^1.1.7"
   },
   "devDependencies": {
     "@eslint/js": "^9.38.0",
     "@eslint/json": "^0.13.2",
     "@eslint/markdown": "^7.5.0",
+    "bcrypt": "^6.0.0",
+    "better-sqlite3": "^12.4.1",
     "eslint": "^9.38.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsonc": "^2.21.0",
@@ -56,16 +61,16 @@
     "eslint-plugin-prettier": "^5.5.4",
     "globals": "^16.4.0",
     "hint": "^7.1.13",
+    "http-proxy-middleware": "^3.0.5",
+    "husky": "^9.1.7",
     "jsonc-eslint-parser": "^2.4.1",
+    "nodemailer": "^7.0.10",
+    "postcss-html": "^1.8.0",
+    "postcss-jsx": "^0.36.4",
     "prettier": "3.6.2",
     "prettier-plugin-organize-imports": "^4.3.0",
     "stylelint": "^16.25.0",
     "stylelint-config-standard": "^39.0.1",
-    "stylelint-order": "^7.0.0",
-    "@titaniumnetwork-dev/ultraviolet": "^3.2.10",
-    "bcrypt": "^6.0.0",
-    "better-sqlite3": "^12.4.1",
-    "http-proxy-middleware": "^3.0.5",
-    "nodemailer": "^7.0.10"
+    "stylelint-order": "^7.0.0"
   }
 }

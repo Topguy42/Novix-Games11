@@ -20,7 +20,6 @@ export default defineConfig([
       }
     },
     rules: {
-      'css/use-baseline': 'off',
       'no-unused-vars': ['warn', { varsIgnorePattern: '^_' }]
     }
   },
@@ -64,7 +63,6 @@ export default defineConfig([
       'public/storage/ag/a/emulatorjs/**/*',
       'public/scram/**/*',
       'public/petezah/**/*',
-      '**/*.min.css',
       'public/epoxy/**/*',
       'public/baremux/**/*',
       'public/youtube/**/*.js',
@@ -75,8 +73,7 @@ export default defineConfig([
   {
     files: ['**/*sw.js', '**/uv.js'],
     languageOptions: {
-      globals: {
-        importScripts: 'readonly',
+      env: {
         serviceworker: true
       }
     }

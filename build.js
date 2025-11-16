@@ -1,3 +1,4 @@
+// @ts-check
 import { execSync, spawn } from 'child_process';
 import { createWriteStream, promises as fs } from 'fs';
 import fse from 'fs-extra';
@@ -16,6 +17,12 @@ const projdir = __dirname;
 
 // JSON stream writer for large arrays
 // Helper to safely encode JSON values
+/**
+ * Safely stringify an object to JSON, removing non-printable characters from strings.
+ *
+ * @param {unknown} obj
+ * @returns {string}
+ */
 function safeJsonStringify(obj) {
   return JSON.stringify(obj, (key, value) => {
     if (typeof value === 'string') {
@@ -29,7 +36,14 @@ function safeJsonStringify(obj) {
   });
 }
 
-class JsonArrayWriter {
+/**
+ * JSON array writer for large datasets.
+ */
+class jsonarraywriter {
+  /**
+   *
+   * @param {string} filePath
+   */
   constructor(filePath) {
     this.stream = createWriteStream(filePath, { encoding: 'utf8' });
     this.count = 0;
@@ -37,12 +51,17 @@ class JsonArrayWriter {
     this.stream.write('[\n');
 
     // Handle stream errors
-    this.stream.on('error', (err) => {
+    this.stream.on('error', ( /** @type {Error} */ err) => {
       console.error(`Error writing to ${filePath}:`, err);
       this.hasError = true;
     });
   }
 
+  /**
+   *
+   * @param {string} obj
+   * @returns {Promise<void>}
+   */
   async write(obj) {
     if (this.hasError) {
       throw new Error('Stream is in error state');
@@ -51,9 +70,9 @@ class JsonArrayWriter {
     return new Promise((resolve, reject) => {
       const data = this.count > 0 ? ',\n  ' : '  ';
       this.stream.write(data + safeJsonStringify(obj), 'utf8', (err) => {
-        if (err) {
+        if ( /** @type {Error} */ err) {
           this.hasError = true;
-          reject(err);
+          reject( /** @type {Error} */ err);
         } else {
           this.count++;
           resolve();
@@ -62,30 +81,40 @@ class JsonArrayWriter {
     });
   }
 
+  /**
+   *
+   * @returns {Promise<number>}
+   */
   async end() {
     if (this.hasError) {
       throw new Error('Stream is in error state');
     }
 
     return new Promise((resolve, reject) => {
-      this.stream.end('\n]\n', 'utf8', (err) => {
+      this.stream.end('\n]\n', 'utf8',
+        /**
+        * @param {Error | null} err
+        */
+        (0.err) => {
         if (err) {
           reject(err);
         } else {
           resolve(this.count);
         }
       });
-    });
-  }
+  });
+}
 }
 
 // Move remaining top-level constants and configuration outside the class
 const args = minimist(process.argv.slice(2));
+/** @type {boolean} */
 let DEBUG = false;
 if (args.env === 'debug') {
   DEBUG = true;
   console.log('Debug mode enabled');
 }
+
 const SKIP_SUBMODULES = args['skip-submodules'] || process.env.SKIP_SUBMODULES === '1' || false;
 const USAGE = `build.js [options]
 
@@ -97,11 +126,13 @@ Options:
 `;
 
 // --- Submodules configuration (mirrors .gitmodules and bash array)
+/** @type {string[]} */
 const Submodules = ['scramjet', 'ultraviolet'];
 
 // --- Build commands ---
+/** @type {Record<string, string>} */
 const buildCommands = {
-  //scramjet: "CI=true pnpm install && PATH='$HOME/.cargo/bin:$PATH' npm run rewriter:build && npm run build:all",
+  //scramjet: "CI=true pnpm install && PATH='$HOME/.cargo/bin:$PATH' npm run rewriter:build && npm run build:all",;
   ultraviolet: 'CI=true npm install && npm run build'
 };
 const YELLOW = '\x1b[33m';
@@ -114,6 +145,12 @@ const OUTPUT_OPTIMG = path.join(projdir, 'public', 'optimg');
 const OUTPUT_OUTVECT = path.join(projdir, 'public', 'outvect');
 
 // Raster formats to generate
+/**
+ * @typedef {Object} RasterTarget
+ * @property {string} ext
+ * @property {(img: import('sharp').Sharp) => import('sharp').Sharp} opts
+ */
+/** @type {RasterTarget[]} */
 const RASTER_TARGETS = [
   { ext: '.avif', opts: (img) => img.avif({ quality: 80 }) },
   { ext: '.webp', opts: (img) => img.webp({ quality: 80 }) },
@@ -126,14 +163,24 @@ const RASTER_INPUT_EXTS = ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff', '.w
 
 // Recognized vector inputs (will be copied and rasterized via sharp)
 const VECTOR_INPUT_EXTS = ['.svg', '.pdf'];
-
+/**
+ * Adds a log section header.
+ *
+ * @param {string} title
+ * @returns {void}
+ */
 function logSection(title) {
   const bar = '-'.repeat(Math.max(10, title.length));
   console.log(`\n${bar}\n${title}\n${bar}`);
 }
 
+/**
+ * Ensure all git submodules are initialized.
+ * @returns {Promise<void>}
+ */
 async function ensureSubmodules() {
   logSection('Checking git submodules');
+  /** @type {boolean} */
   let missing = false;
   for (const name of Submodules) {
     const dir = path.join(projdir, 'external', name);
@@ -151,6 +198,10 @@ async function ensureSubmodules() {
 
   if (missing) {
     console.log('Not all submodules found, installing...');
+    /**
+     * @type {Promise<void>}
+     * @returns {Promise<void>}
+     */
     await new Promise((resolve, reject) => {
       const p = spawn('git', ['submodule', 'update', '--init', '--recursive'], { cwd: projdir, stdio: 'inherit' });
       p.on('close', (code) => {
@@ -163,6 +214,10 @@ async function ensureSubmodules() {
   }
 }
 
+/**
+ * Check if WSL is installed and accessible.
+ * @returns {void}
+ */
 function checkWSL() {
   try {
     const output = execSync('wsl.exe --list --quiet', { encoding: 'utf-8' });
@@ -171,11 +226,18 @@ function checkWSL() {
       throw new Error('WSL is installed but no distros found.');
     }
     console.log(`WSL distros detected: ${distros.trim()}`);
-  } catch (err) {
+  } catch ( /** @type {Error} */ err) {
     throw new Error('WSL is not installed or inaccessible. Details: ' + err.message);
   }
 }
 
+/**
+ * Converts Windows path to WSL path and wraps command for WSL execution.
+ *
+ * @param {string} command - The shell command to run
+ * @param {string} cwd - The current working directory (Windows path)
+ * @returns {string} - The wrapped command string for WSL execution
+ */
 function wrapCommandForWSL(command, cwd) {
   if (os.platform() !== 'win32') {
     console.log('Non-Windows platform detected, continuing');
@@ -194,20 +256,27 @@ function wrapCommandForWSL(command, cwd) {
   }
 }
 
+/**
+ * Builds all configured git submodules with their respective build commands.
+ * @returns {Promise<void>} Resolves when all submodules are built
+ */
 async function buildSubmodules() {
   for (const name of Submodules) {
     logSection(`Building ${name}`);
+    /** @type {string} */
     const subdir = path.join(projdir, 'external', name);
+    /** @type {string | undefined} */
     const buildcommand = buildCommands[name];
     if (!buildcommand) {
       console.warn(`No build command found for ${name}; skipping.`);
       continue;
     }
-
+    /** @type {string} */
     const wrapped = wrapCommandForWSL(buildcommand, subdir);
     await new Promise((resolve, reject) => {
+      /** @type {import('child_process').ChildProcess} */
       let command;
-      if (DEBUG === true && os.platform !== 'win32') {
+      if (DEBUG === true && os.platform() !== 'win32') {
         command = spawn(wrapped, {
           shell: true,
           cwd: subdir,
@@ -222,12 +291,12 @@ async function buildSubmodules() {
           stdio: ['inherit', 'pipe', 'pipe']
         });
       }
-      command.stdout.on('data', (data) => {
+      command.stdout?.on('data', (data) => {
         process.stdout.write(`${GREEN}${data}${RESET}`);
       });
 
       if (DEBUG === true) {
-        command.stderr.on('data', (data) => {
+        command.stderr?.on('data', (data) => {
           process.stderr.write(`${YELLOW}${data}${RESET}`);
         });
       }
@@ -243,10 +312,24 @@ async function buildSubmodules() {
   }
 }
 
+/**
+ *
+ * @param {string} ext
+ * @param {string[]} validExts
+ * @returns {boolean}
+ */
 function shouldProcess(ext, validExts) {
   return validExts.includes(ext.toLowerCase());
 }
 
+/**
+ * Convert a raster file to multiple formats.
+ *
+ * @param {string} inputPath
+ * @param {string} baseDir
+ * @param {string} outBase
+ * @returns {Promise<void>}
+ */
 async function convertRasterFile(inputPath, baseDir, outBase) {
   const ext = path.extname(inputPath).toLowerCase();
   const rel = path.relative(baseDir, inputPath);
@@ -352,19 +435,33 @@ const VIDEO_EXTENSIONS = ['.mp4', '.webm', '.mov'];
 // Set of valid extensions for faster lookup
 const VALID_EXTENSIONS = new Set([HTML_EXT, ...IMAGE_EXTENSIONS, ...VIDEO_EXTENSIONS]);
 const ignorePath = path.join(__dirname, '.sitemapignore');
+/**
+ * @type {import('ignore').Ignore}
+ */
 let sitemapIgnore;
 try {
   const ignoreContent = await fse.readFile(ignorePath, 'utf8');
   sitemapIgnore = ignore().add(ignoreContent);
   console.log('Loaded .sitemapignore rules');
-} catch (err) {
+} catch ( /** @type {Error} */ err) {
   console.warn('No .sitemapignore file found or failed to read:', err.message);
   sitemapIgnore = ignore();
 }
 
+/**
+ *
+ * @param {string} dir
+ * @param {string} [baseUrl]
+ * @returns {Promise<Array<{filePath: string, loc: string, lastmod: string, ext: string, commitCount: number}>>}
+ */
 async function crawlAsync(dir, baseUrl = '') {
   try {
+    /**
+     * @type {Array<{filePath: string, loc: string, lastmod: string, ext: string, commitCount: number}>}
+     */
+
     const results = [];
+    /** @type {import('fs').Dirent[]} */
     const entries = await fse.readdir(dir, { withFileTypes: true });
 
     // Process directories and files in parallel
@@ -402,10 +499,10 @@ async function crawlAsync(dir, baseUrl = '') {
               ext,
               commitCount: 0
             });
-          } catch (statErr) {
+          } catch (/** @type {Error} */ statErr) {
             console.warn(`Warning: Could not stat file ${full}: ${statErr.message}`);
           }
-        } catch (err) {
+        } catch (/** @type {Error} */ err) {
           console.warn(`Warning: Error processing ${full}: ${err.message}`);
         }
       })
@@ -413,7 +510,7 @@ async function crawlAsync(dir, baseUrl = '') {
 
     await Promise.all(processPromises);
     return results;
-  } catch (err) {
+  } catch (/** @type {Error} */ err) {
     console.error(`Error crawling directory ${dir}: ${err.message}`);
     return [];
   }
@@ -438,21 +535,32 @@ async function getFileGitData(filePath) {
     }
 
     const result = {
-      lastmod: new Date(commits[0].commit.committer.timestamp * 1000).toISOString(),
-      commitCount: commits.length
+      commitCount: commits.length,
+      lastmod: new Date(commits[0].commit.committer.timestamp * 1000).toISOString()
     };
     gitCache.set(cacheKey, result);
     return result;
-  } catch (err) {
+  } catch (/** @type {Error} */ err) {
     if (DEBUG) {
       console.warn(`Git data fetch failed for ${filePath}: ${err.message}`);
     }
-    const result = { lastmod: null, commitCount: 0 };
+    const result = { commitCount: 0, lastmod: null };
     gitCache.set(cacheKey, result);
     return result;
   }
 }
-function withConcurrencyLimit(items, limit, fn, flushCallback = null, options = {}) {
+
+/**
+ * Run tasks with concurrency limit.
+ *
+ * @template T
+ * @param {T[]} items
+ * @param {number} limit
+ * @param {(item: T, index: number) => Promise<unknown>} fn
+ * @param {(results: unknown[]) => Promise<void>} [flushCallback]
+ * @returns {Promise<unknown[]>}
+ */
+function withConcurrencyLimit(items, limit, fn, flushCallback) {
   const results = [];
   let i = 0;
   let activeWorkers = 0;
@@ -482,7 +590,7 @@ function withConcurrencyLimit(items, limit, fn, flushCallback = null, options = 
         if (DEBUG) {
           console.log(`Worker started. Active: ${activeWorkers}`);
         }
-      } catch (err) {
+      } catch (/** @type {Error} */ err) {
         console.warn(`Worker error at index ${idx}:`, err.message);
       } finally {
         activeWorkers--;
@@ -511,6 +619,12 @@ function computePriority(commitCount, maxCommits) {
   return Math.max(0.1, Math.min(1.0, normalized));
 }
 
+/**
+ * Compute change frequency based on last modification date.
+ *
+ * @param {string} lastmod
+ * @returns {string}
+ */
 function computeChangefreq(lastmod) {
   const last = new Date(lastmod);
   const days = (Date.now() - last.getTime()) / (1000 * 60 * 60 * 24);
@@ -521,6 +635,12 @@ function computeChangefreq(lastmod) {
   return 'yearly';
 }
 
+/**
+ * Format duration in milliseconds to human-readable string.
+ *
+ * @param {number} ms
+ * @returns
+ */
 function formatDuration(ms) {
   let s = Math.floor(ms / 1000);
   const h = Math.floor(s / 3600);
@@ -608,7 +728,7 @@ async function main() {
           entry,
           gitData: dirGitData // Use directory git data as fallback
         }));
-      } catch (err) {
+      } catch ( /** @type {Error} */ err) {
         console.warn(`Warning: Failed to get git data for directory ${dir} with error: ${err.message}`);
         return entries.map((entry) => ({ entry, gitData: null }));
       }
@@ -649,7 +769,7 @@ async function main() {
               ext: entry.ext,
               commitCount: gitData.commitCount || 0
             };
-          } catch (err) {
+          } catch ( /** @type {Error} */ err) {
             console.warn(`Warning: Failed to process entry ${entry.filePath}: ${err.message}`);
             return {
               loc: entry.loc,
@@ -662,6 +782,7 @@ async function main() {
         async (partialResults) => {
           // Flush partial results to disk
           for (const entry of partialResults.filter(Boolean)) {
+            /** @type {partialResults} */
             try {
               await writer.write({
                 ...entry,
@@ -675,7 +796,6 @@ async function main() {
           }
           partialResults.length = 0; // clear memory
         }
-      );
 
       // Final flush after batch
       for (const entry of enriched.filter(Boolean)) {
@@ -686,7 +806,7 @@ async function main() {
             changefreq: computeChangefreq(entry.lastmod)
           });
           processed++;
-        } catch (writeErr) {
+        } catch (/** @type {Error} */ writeErr) {
           console.error(`Error writing entry ${entry.loc}: ${writeErr.message}`);
         }
       }
@@ -695,7 +815,7 @@ async function main() {
         console.log(`Processed ${processed}/${crawled.length} files (${Math.round((processed / crawled.length) * 100)}%)...`);
       }
     }
-  } catch (err) {
+  } catch ( /** @type {Error} */ err) {
     console.error('Error during sitemap generation:', err);
     throw err;
   }
@@ -708,7 +828,7 @@ async function main() {
     const cacheObject = Object.fromEntries(gitCache);
     await fse.writeJson(sitemapCachePath, cacheObject, { spaces: 2 });
     console.log(`Saved git cache with ${gitCache.size} entries`);
-  } catch (err) {
+  } catch ( /** @type {Error} */ err) {
     console.warn('Failed to save git cache:', err.message);
   }
 
@@ -741,7 +861,7 @@ async function main() {
     } else {
       console.log('Sitemap validation successful');
     }
-  } catch (err) {
+  } catch ( /** @type {Error} */ err) {
     console.error('Sitemap validation failed:', err.message);
     throw err;
   }
@@ -757,7 +877,8 @@ async function main() {
   };
 }
 
-main().catch((err) => {
-  console.error(err);
+main().catch(( /** @type {Error} */ err) => {
+  console.error( /** @type {Error} */ err);
   process.exit(1);
 });
+
