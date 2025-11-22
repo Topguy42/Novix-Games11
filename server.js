@@ -5,7 +5,7 @@ import { createServer } from "node:http";
 import { epoxyPath } from "@mercuryworkshop/epoxy-transport";
 import { libcurlPath } from "@mercuryworkshop/libcurl-transport";
 import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
-import { scramjetPath } from "@mercuryworkshop/scramjet/path";
+import { scramjetPath } from "@mercuryworkshop/scramjet";
 import { server as wisp } from "@mercuryworkshop/wisp-js/server";
 import { uvPath } from "@titaniumnetwork-dev/ultraviolet";
 import path, { join } from "node:path";
