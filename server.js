@@ -5,7 +5,7 @@ import { createServer } from "node:http";
 import { epoxyPath } from "@mercuryworkshop/epoxy-transport";
 import { libcurlPath } from "@mercuryworkshop/libcurl-transport";
 import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
-import { scramjetPath } from "@mercuryworkshop/scramjet";
+import { scramjetPath } from "@mercuryworkshop/scramjet/path";
 import { server as wisp } from "@mercuryworkshop/wisp-js/server";
 import { uvPath } from "@titaniumnetwork-dev/ultraviolet";
 import path, { join } from "node:path";
@@ -562,12 +562,20 @@ const handleUpgradeVerification = (req, socket, next) => {
   const verified = isVerified(req);
   const isWsBrowser = isBrowser(req);
   console.log(`WebSocket Upgrade Attempt: URL=${req.url}, Verified=${verified}, IsBrowser=${isWsBrowser}, Cookies=${req.headers.cookie || 'none'}`);
-  if (req.url.startsWith("/wisp/")) {
+  
+  // Allow all WISP endpoints without verification
+  if (req.url.startsWith("/wisp/") || 
+      req.url.startsWith("/api/wisp-premium/") || 
+      req.url.startsWith("/api/alt-wisp-1/") || 
+      req.url.startsWith("/api/alt-wisp-2/") || 
+      req.url.startsWith("/api/alt-wisp-3/")) {
     return next();
   }
+  
   if (verified && isWsBrowser) {
     return next();
   }
+  
   console.log(`WebSocket Rejected: URL=${req.url}, Reason=${verified ? 'Not a browser' : 'Not verified'}`);
   socket.destroy();
 };
@@ -588,26 +596,27 @@ const server = createServer((req, res) => {
 
 server.on("upgrade", (req, socket, head) => {
   if (bare.shouldRoute(req)) {
-    handleUpgradeVerification(req, socket, () => {
-      bare.routeUpgrade(req, socket, head);
-    });
+    handleUpgradeVerification(req, socket, () => bare.routeUpgrade(req, socket, head));
   } else if (barePremium.shouldRoute(req)) {
-    handleUpgradeVerification(req, socket, () => {
-      barePremium.routeUpgrade(req, socket, head);
-    });
-  } else if (req.url && (req.url.startsWith("/wisp/") || req.url.startsWith("/api/wisp-premium/"))) {
-    handleUpgradeVerification(req, socket, () => {
-      if (req.url.startsWith("/api/wisp-premium/")) {
-        req.url = req.url.replace("/api/wisp-premium/", "/wisp/");
-      }
-      wisp.routeRequest(req, socket, head);
-    });
+    handleUpgradeVerification(req, socket, () => barePremium.routeUpgrade(req, socket, head));
+  } else if (req.url?.startsWith("/wisp/") || 
+             req.url?.startsWith("/api/wisp-premium/") || 
+             req.url?.startsWith("/api/alt-wisp-1/") || 
+             req.url?.startsWith("/api/alt-wisp-2/") || 
+             req.url?.startsWith("/api/alt-wisp-3/")) {
+    // Skip verification for WISP endpoints
+    if (req.url.startsWith("/api/wisp-premium/")) req.url = req.url.replace("/api/wisp-premium/", "/wisp/");
+    if (req.url.startsWith("/api/alt-wisp-1/")) req.url = req.url.replace("/api/alt-wisp-1/", "/wisp/");
+    if (req.url.startsWith("/api/alt-wisp-2/")) req.url = req.url.replace("/api/alt-wisp-2/", "/wisp/");
+    if (req.url.startsWith("/api/alt-wisp-3/")) req.url = req.url.replace("/api/alt-wisp-3/", "/wisp/");
+    wisp.routeRequest(req, socket, head);
   } else {
     socket.destroy();
   }
 });
 // In my serverside config I rewrite /api/bare-premium/ and /api/wisp-premium/ to go to a bare/wisp servers from non-flagged ip datacenters to allow for cloudflare/google protected sites to work.
 // If you are self hosting, this will not apply to you, and google/youtube/cloudflare protected sites will probably not work unless you run this on a non-flagged ip.
+// I also do the same for /api/alt-wisp-1/, /api/alt-wisp-2/, and /api/alt-wisp-3/ to different bare/wisp servers for load balancing and vpn connections
 
 const port = parseInt(process.env.PORT || "3000");
 

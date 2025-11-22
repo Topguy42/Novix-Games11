@@ -166,6 +166,173 @@
         padding: 5px 10px;
         border-radius: 10px;
       }
+      #vpn-selector {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 100;
+        opacity: 0;
+        animation: fadeIn 2s ease forwards;
+        animation-delay: 0.5s;
+      }
+      .vpn-button {
+        padding: 6px 10px;
+        background: rgba(20, 30, 48, 0.92);
+        border: 1px solid rgba(100, 166, 224, 0.15);
+        border-radius: 8px;
+        color: white;
+        font-family: "Outfit", sans-serif;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        outline: none;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(20px);
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        min-width: 110px;
+      }
+      .vpn-button:hover {
+        background: rgba(30, 45, 70, 0.95);
+        border-color: rgba(100, 166, 224, 0.3);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+      }
+      .vpn-button .flag-icon {
+        width: 16px;
+        height: 16px;
+        border-radius: 2px;
+        flex-shrink: 0;
+      }
+      .vpn-button .chevron {
+        margin-left: auto;
+        font-size: 9px;
+        opacity: 0.5;
+        transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .vpn-button.active .chevron {
+        transform: rotate(180deg);
+      }
+      .vpn-dropdown-panel {
+        display: none;
+        position: fixed;
+        top: 50px;
+        left: 10px;
+        background: rgba(20, 30, 48, 0.96);
+        border: 1px solid rgba(100, 166, 224, 0.15);
+        border-radius: 10px;
+        padding: 10px;
+        backdrop-filter: blur(30px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+        width: 140px;
+        animation: slideDown 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .vpn-dropdown-panel.show {
+        display: block;
+      }
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .vpn-panel-header {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 10px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid rgba(100, 166, 224, 0.1);
+      }
+      .vpn-panel-header i {
+        font-size: 12px;
+        color: rgba(100, 166, 224, 0.8);
+      }
+      .vpn-panel-header h3 {
+        margin: 0;
+        font-size: 12px;
+        font-weight: 600;
+        color: white;
+        letter-spacing: 0.3px;
+      }
+      .vpn-regions-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .vpn-region-card {
+        background: rgba(30, 45, 70, 0.4);
+        border: 1px solid rgba(100, 166, 224, 0.1);
+        border-radius: 7px;
+        padding: 8px;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        position: relative;
+      }
+      .vpn-region-card:hover {
+        background: rgba(40, 60, 90, 0.5);
+        border-color: rgba(100, 166, 224, 0.25);
+        transform: translateX(2px);
+      }
+      .vpn-region-card.selected {
+        background: rgba(100, 166, 224, 0.15);
+        border-color: rgba(100, 166, 224, 0.4);
+      }
+      .vpn-region-card.selected::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: linear-gradient(180deg, rgba(100, 166, 224, 0.9), rgba(100, 166, 224, 0.5));
+        border-radius: 7px 0 0 7px;
+      }
+      .flag-icon {
+        width: 20px;
+        height: 20px;
+        border-radius: 3px;
+        flex-shrink: 0;
+        background-size: cover;
+        background-position: center;
+      }
+      .vpn-region-info {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        flex: 1;
+      }
+      .vpn-location {
+        font-size: 12px;
+        font-weight: 600;
+        color: white;
+        line-height: 1.2;
+      }
+      .vpn-country {
+        font-size: 10px;
+        color: rgba(255, 255, 255, 0.5);
+        font-weight: 400;
+        line-height: 1.2;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
       .popup {
         display: none;
         position: fixed;
@@ -234,7 +401,7 @@
         transition: all 0.3s ease;
       }
       .popup input[type="file"]::-webkit-file-upload-button:hover {
-        background: rgba(255, 255, 255砨, 0.2);
+        background: rgba(255, 255, 255, 0.2);
         border-color: rgba(255, 255, 255, 0.4);
       }
       .popup-buttons {
@@ -291,6 +458,54 @@
   </head>
   <body>
     <div class="god-rays"></div>
+    <div id="vpn-selector">
+      <button class="vpn-button" id="vpn-toggle">
+        <div class="flag-icon" id="current-flag" style="background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2IDMiPjxyZWN0IHdpZHRoPSI2IiBoZWlnaHQ9IjMiIGZpbGw9IiNkNTIwMWYiLz48cmVjdCB3aWR0aD0iNiIgaGVpZ2h0PSIxLjUiIGZpbGw9IiNmZmYiLz48L3N2Zz4=')"></div>
+        <span id="current-region">Canada</span>
+        <i class="fas fa-chevron-down chevron"></i>
+      </button>
+      
+      <div class="vpn-dropdown-panel" id="vpn-panel">
+        <div class="vpn-panel-header">
+          <i class="fas fa-shield-halved"></i>
+          <h3>VPN Region</h3>
+        </div>
+        
+        <div class="vpn-regions-grid">
+          <div class="vpn-region-card selected" data-region="default">
+            <div class="flag-icon" style="background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2IDMiPjxyZWN0IHdpZHRoPSI2IiBoZWlnaHQ9IjMiIGZpbGw9IiNkNTIwMWYiLz48cmVjdCB3aWR0aD0iNiIgaGVpZ2h0PSIxLjUiIGZpbGw9IiNmZmYiLz48L3N2Zz4=')"></div>
+            <div class="vpn-region-info">
+              <div class="vpn-location">Quebec</div>
+              <div class="vpn-country">Canada</div>
+            </div>
+          </div>
+          
+          <div class="vpn-region-card" data-region="1">
+            <div class="flag-icon" style="background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3NDEwIDM5MDAiPjxyZWN0IHdpZHRoPSI3NDEwIiBoZWlnaHQ9IjM5MDAiIGZpbGw9IiNiMjIyMzQiLz48cGF0aCBkPSJNMCwwaDc0MTB2MzAwSDBaTTAsNjAwaDE3NDEwdjMwMEgwWk0wLDEyMDBoNzQxMHYzMDBIMFpNMCwxODAwaDc0MTB2MzAwSDBaTTAsMjQwMGg3NDEwdjMwMEgwWk0wLDMwMDBoNzQxMHYzMDBIMFpNMCwzNjAwaDE3NDEwdjMwMEgweiIgZmlsbD0iI2ZmZiIvPjxyZWN0IHdpZHRoPSIyOTY0IiBoZWlnaHQ9IjIxMDAiIGZpbGw9IiMzYzNiNmUiLz48L3N2Zz4=')"></div>
+            <div class="vpn-region-info">
+              <div class="vpn-location">Texas</div>
+              <div class="vpn-country">America</div>
+            </div>
+          </div>
+          
+          <div class="vpn-region-card" data-region="2">
+            <div class="flag-icon" style="background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3NDEwIDM5MDAiPjxyZWN0IHdpZHRoPSI3NDEwIiBoZWlnaHQ9IjM5MDAiIGZpbGw9IiNiMjIyMzQiLz48cGF0aCBkPSJNMCwwaDc0MTB2MzAwSDBaTTAsNjAwaDE3NDEwdjMwMEgwWk0wLDEyMDBoNzQxMHYzMDBIMFpNMCwxODAwaDc0MTB2MzAwSDBaTTAsMjQwMGg3NDEwdjMwMEgwWk0wLDMwMDBoNzQxMHYzMDBIMFpNMCwzNjAwaDE3NDEwdjMwMEgweiIgZmlsbD0iI2ZmZiIvPjxyZWN0IHdpZHRoPSIyOTY0IiBoZWlnaHQ9IjIxMDAiIGZpbGw9IiMzYzNiNmUiLz48L3N2Zz4=')"></div>
+            <div class="vpn-region-info">
+              <div class="vpn-location">Phoenix</div>
+              <div class="vpn-country">America</div>
+            </div>
+          </div>
+          
+          <div class="vpn-region-card" data-region="3">
+            <div class="flag-icon" style="background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3NDEwIDM5MDAiPjxyZWN0IHdpZHRoPSI3NDEwIiBoZWlnaHQ9IjM5MDAiIGZpbGw9IiNiMjIyMzQiLz48cGF0aCBkPSJNMCwwaDc0MTB2MzAwSDBaTTAsNjAwaDE3NDEwdjMwMEgwWk0wLDEyMDBoNzQxMHYzMDBIMFpNMCwxODAwaDc0MTB2MzAwSDBaTTAsMjQwMGg3NDEwdjMwMEgwWk0wLDMwMDBoNzQxMHYzMDBIMFpNMCwzNjAwaDE3NDEwdjMwMEgweiIgZmlsbD0iI2ZmZiIvPjxyZWN0IHdpZHRoPSIyOTY0IiBoZWlnaHQ9IjIxMDAiIGZpbGw9IiMzYzNiNmUiLz48L3N2Zz4=')"></div>
+            <div class="vpn-region-info">
+              <div class="vpn-location">Mclean</div>
+              <div class="vpn-country">America</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <br /><br /><br /><br /><br />
     <h1>Pete Proxy</h1>
     <p id="dynamicParagraph">(TEXT)</p>
@@ -438,7 +653,7 @@
       })();
     </script>
     <script src="/scram/scramjet.all.js"></script>
-    <script src="config.js"></script>
+    <script id="config-script" src="config.js"></script>
     <script>
       const phrases = [
         "If the Proxy doesnt work go the top left, settings, then tap the `fix proxy` button",
@@ -471,6 +686,102 @@
       const addBtn = document.getElementById("add-btn");
       const cancelBtn = document.getElementById("cancel-btn");
       const pinnedIcons = document.querySelector(".pinned-icons");
+      const vpnToggle = document.getElementById("vpn-toggle");
+      const vpnPanel = document.getElementById("vpn-panel");
+      const vpnCards = document.querySelectorAll(".vpn-region-card");
+      
+      const regionData = {
+        default: { flag: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2IDMiPjxyZWN0IHdpZHRoPSI2IiBoZWlnaHQ9IjMiIGZpbGw9IiNkNTIwMWYiLz48cmVjdCB3aWR0aD0iNiIgaGVpZ2h0PSIxLjUiIGZpbGw9IiNmZmYiLz48L3N2Zz4=", name: "Canada", location: "Quebec" },
+        "1": { flag: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3NDEwIDM5MDAiPjxyZWN0IHdpZHRoPSI3NDEwIiBoZWlnaHQ9IjM5MDAiIGZpbGw9IiNiMjIyMzQiLz48cGF0aCBkPSJNMCwwaDc0MTB2MzAwSDBaTTAsNjAwaDE3NDEwdjMwMEgwWk0wLDEyMDBoNzQxMHYzMDBIMFpNMCwxODAwaDc0MTB2MzAwSDBaTTAsMjQwMGg3NDEwdjMwMEgwWk0wLDMwMDBoNzQxMHYzMDBIMFpNMCwzNjAwaDE3NDEwdjMwMEgweiIgZmlsbD0iI2ZmZiIvPjxyZWN0IHdpZHRoPSIyOTY0IiBoZWlnaHQ9IjIxMDAiIGZpbGw9IiMzYzNiNmUiLz48L3N2Zz4=", name: "America", location: "Texas" },
+        "2": { flag: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3NDEwIDM5MDAiPjxyZWN0IHdpZHRoPSI3NDEwIiBoZWlnaHQ9IjM5MDAiIGZpbGw9IiNiMjIyMzQiLz48cGF0aCBkPSJNMCwwaDc0MTB2MzAwSDBaTTAsNjAwaDE3NDEwdjMwMEgwWk0wLDEyMDBoNzQxMHYzMDBIMFpNMCwxODAwaDc0MTB2MzAwSDBaTTAsMjQwMGg3NDEwdjMwMEgwWk0wLDMwMDBoNzQxMHYzMDBIMFpNMCwzNjAwaDE3NDEwdjMwMEgweiIgZmlsbD0iI2ZmZiIvPjxyZWN0IHdpZHRoPSIyOTY0IiBoZWlnaHQ9IjIxMDAiIGZpbGw9IiMzYzNiNmUiLz48L3N2Zz4=", name: "America", location: "Phoenix" },
+        "3": { flag: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3NDEwIDM5MDAiPjxyZWN0IHdpZHRoPSI3NDEwIiBoZWlnaHQ9IjM5MDAiIGZpbGw9IiNiMjIyMzQiLz48cGF0aCBkPSJNMCwwaDc0MTB2MzAwSDBaTTAsNjAwaDE3NDEwdjMwMEgwWk0wLDEyMDBoNzQxMHYzMDBIMFpNMCwxODAwaDc0MTB2MzAwSDBaTTAsMjQwMGg3NDEwdjMwMEgwWk0wLDMwMDBoNzQxMHYzMDBIMFpNMCwzNjAwaDE3NDEwdjMwMEgweiIgZmlsbD0iI2ZmZiIvPjxyZWN0IHdpZHRoPSIyOTY0IiBoZWlnaHQ9IjIxMDAiIGZpbGw9IiMzYzNiNmUiLz48L3N2Zz4=", name: "America", location: "Mclean" }
+      };
+
+      const regionConfig = {
+        default: { wisp: "/wisp/", config: "config.js" },
+        "1": { wisp: "/api/alt-wisp-1/", config: "/static/alt-config-1.js" },
+        "2": { wisp: "/api/alt-wisp-2/", config: "/static/alt-config-2.js" },
+        "3": { wisp: "/api/alt-wisp-3/", config: "/static/alt-config-3.js" }
+      };
+
+      vpnToggle.addEventListener("click", function(e) {
+        e.stopPropagation();
+        vpnPanel.classList.toggle("show");
+        vpnToggle.classList.toggle("active");
+      });
+
+      document.addEventListener("click", function(e) {
+        if (!vpnPanel.contains(e.target) && !vpnToggle.contains(e.target)) {
+          vpnPanel.classList.remove("show");
+          vpnToggle.classList.remove("active");
+        }
+      });
+
+      vpnCards.forEach(card => {
+        card.addEventListener("click", function() {
+          const selectedRegion = this.getAttribute("data-region");
+          const config = regionConfig[selectedRegion];
+          const data = regionData[selectedRegion];
+          
+          vpnCards.forEach(c => c.classList.remove("selected"));
+          this.classList.add("selected");
+          
+          document.getElementById("current-flag").style.backgroundImage = `url('${data.flag}')`;
+          document.getElementById("current-region").textContent = data.name;
+          
+          localStorage.setItem("selectedVpnRegion", selectedRegion);
+          
+          const configScript = document.getElementById("config-script");
+          if (configScript) {
+            configScript.remove();
+          }
+          
+          const newConfigScript = document.createElement("script");
+          newConfigScript.id = "config-script";
+          newConfigScript.src = config.config;
+          newConfigScript.onload = function() {
+            if (typeof _CONFIG !== "undefined") {
+              _CONFIG.wispurl = (location.protocol === "https:" ? "wss" : "ws") + "://" + location.host + config.wisp;
+              store.wispurl = _CONFIG.wispurl;
+              connection.setTransport("/epoxy/index.mjs", [{ wisp: store.wispurl }]).catch(err => {
+                console.log("Transport update:", err);
+              });
+            }
+          };
+          document.body.appendChild(newConfigScript);
+          
+          window.dispatchEvent(new StorageEvent('storage', {
+            key: 'selectedVpnRegion',
+            newValue: selectedRegion,
+            url: window.location.href
+          }));
+          
+          vpnPanel.classList.remove("show");
+          vpnToggle.classList.remove("active");
+        });
+      });
+
+      const savedRegion = localStorage.getItem("selectedVpnRegion");
+      if (savedRegion && regionConfig[savedRegion]) {
+        const savedData = regionData[savedRegion];
+        document.getElementById("current-flag").style.backgroundImage = `url('${savedData.flag}')`;
+        document.getElementById("current-region").textContent = savedData.name;
+        
+        vpnCards.forEach(card => {
+          if (card.getAttribute("data-region") === savedRegion) {
+            card.classList.add("selected");
+          } else {
+            card.classList.remove("selected");
+          }
+        });
+        
+        const config = regionConfig[savedRegion];
+        const configScript = document.getElementById("config-script");
+        if (configScript) {
+          configScript.src = config.config;
+        }
+      }
+
       const { ScramjetController } = $scramjetLoadController();
       const scramjet = new ScramjetController({
         prefix: "/scramjet/",
@@ -553,7 +864,6 @@
       window.addEventListener("load", loadSavedPins);
       navigator.serviceWorker.register("./sw.js");
       const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
-      // build store safely (use $store if available, otherwise plain object)
       const _storeData = {
         url: "https://",
         wispurl:
@@ -619,7 +929,6 @@
         }
       }
 
-      // start trying to set a transport (runs async)
       waitForTransport();
       connection.setTransport("/epoxy/index.mjs", [{ wisp: store.wispurl }]);
       function handleSubmit(e) {
