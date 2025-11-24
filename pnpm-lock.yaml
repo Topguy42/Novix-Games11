@@ -21,8 +21,8 @@ importers:
         specifier: https://github.com/MercuryWorkshop/scramjet/archive/refs/tags/latest.tar.gz
         version: https://github.com/MercuryWorkshop/scramjet/archive/refs/tags/latest.tar.gz
       '@mercuryworkshop/wisp-js':
-        specifier: ^0.3.3
-        version: 0.3.3(utf-8-validate@6.0.5)
+        specifier: ^0.4.0
+        version: 0.4.0(utf-8-validate@6.0.5)
       '@supabase/supabase-js':
         specifier: ^2.45.4
         version: 2.84.0(bufferutil@4.0.9)(utf-8-validate@6.0.5)
@@ -100,8 +100,8 @@ packages:
     resolution: {tarball: https://github.com/MercuryWorkshop/scramjet/archive/refs/tags/latest.tar.gz}
     version: 2.0.0-alpha
 
-  '@mercuryworkshop/wisp-js@0.3.3':
-    resolution: {integrity: sha512-egc9jbBmNqPXGOkvOOG142SLaBL3jBkz0IGnhYYWOnmg5FeC6KfGSRU5xlk+dKYecE3tuH03bFNi3/vBAOoJKA==}
+  '@mercuryworkshop/wisp-js@0.4.0':
+    resolution: {integrity: sha512-rtUSxW8krWS5RGtcFomnoQl/9nrsDnUh7duPcJeQtIqnt5txB7AZJEa6N87CD7UXJzCZVijr1mUHwZy0kHJ+fQ==}
     hasBin: true
 
   '@supabase/auth-js@2.84.0':
@@ -225,9 +225,9 @@ packages:
     resolution: {integrity: sha512-y4Mg2tXshplEbSGzx7amzPwKKOCGuoSRP/CjEdwwk0FOGlUbq6lKuoyDZTNZkmxHdJtp54hdfY/JUrdL7Xfdug==}
     engines: {node: '>=14'}
 
-  commander@12.1.0:
-    resolution: {integrity: sha512-Vw8qHK3bZM9y/P10u3Vib8o/DdkvA2OtPtZvD871QKjy74Wj1WSKFILMPRPSdUSx5RFK1arlJzEtA4PkFgnbuA==}
-    engines: {node: '>=18'}
+  commander@14.0.2:
+    resolution: {integrity: sha512-TywoWNNRbhoD0BXs1P3ZEScW8W5iKrnbithIl0YH+uCmBd0QpPOA8yc82DS3BIE5Ma6FnBVUsJ7wVUDz4dvOWQ==}
+    engines: {node: '>=20'}
 
   content-disposition@0.5.4:
     resolution: {integrity: sha512-FveZTNuGw04cxlAiWbzi6zTAL/lhehaWbTtgluJh4/E95DqMwTmha3KZN1aAWA8cFIhHzMZUvLevkw5Rqk+tSQ==}
@@ -910,10 +910,10 @@ snapshots:
       parse-domain: 8.2.2
       set-cookie-parser: 2.7.2
 
-  '@mercuryworkshop/wisp-js@0.3.3(utf-8-validate@6.0.5)':
+  '@mercuryworkshop/wisp-js@0.4.0(utf-8-validate@6.0.5)':
     dependencies:
       bufferutil: 4.0.9
-      commander: 12.1.0
+      commander: 14.0.2
       ipaddr.js: 2.2.0
       ws: 8.18.3(bufferutil@4.0.9)(utf-8-validate@6.0.5)
     transitivePeerDependencies:
@@ -1083,7 +1083,7 @@ snapshots:
 
   commander@10.0.1: {}
 
-  commander@12.1.0: {}
+  commander@14.0.2: {}
 
   content-disposition@0.5.4:
     dependencies:
