@@ -1,4 +1,5 @@
 {
+  "$schema": "https://raw.githubusercontent.com/Proxy-alt/sschemas/refs/heads/main/schema.app.json",
   "name": "PeteZahGames",
   "description": "Express + static proxy site (PeteZahGames)",
   "repository": "https://github.com/PeteZah-Games/PeteZahGames",

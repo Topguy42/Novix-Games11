@@ -55,6 +55,10 @@ pnpm-lock.yaml merge=ours
 *.min.js linguist-generated
 *.map linguist-generated
 scramjet.* linguist-generated
+*bundle.js linguist-generated
+/external/** linguist-vendored
+/public/static/uv/ linguist-generated
+/public/scram/* linguist-generated
 *.test.js linguist-documentation
 
 # ========================
