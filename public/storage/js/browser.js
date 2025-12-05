@@ -39,7 +39,7 @@ const store = {
   proxy: "",
   transport: "/epoxy/index.mjs",
   theme: "dark",
-  homepage: "petezah://newtab",
+  homepage: "novix://newtab",
   history: JSON.parse(localStorage.getItem("browserHistory") || "[]"),
   zoomLevel: 1,
   favorites: JSON.parse(localStorage.getItem("browserFavorites") || "[]"),
@@ -117,7 +117,7 @@ function createTab(url = store.homepage) {
     pinned: false,
   };
 
-  frame.frame.src = url === "petezah://newtab" ? "/newpage.html" : url;
+  frame.frame.src = url === "novix://newtab" ? "/newpage.html" : url;
   frame.frame.onload = function() {
     try {
       const doc = frame.frame.contentDocument;
@@ -146,7 +146,7 @@ function createTab(url = store.homepage) {
       tab.title = new URL(e.url).hostname || "...";
     }
 
-    if (e.url !== "petezah://newtab") {
+    if (e.url !== "novix://newtab") {
       store.history.push({ url: e.url, title: tab.title, timestamp: new Date() });
       localStorage.setItem("browserHistory", JSON.stringify(store.history));
     }
@@ -407,7 +407,7 @@ function updateAddressBar() {
   if (addressBar && activeTab) {
     addressBar.value = activeTab.url;
     const url = activeTab.url;
-    if (url.startsWith("petezah://newtab")) {
+    if (url.startsWith("novix://newtab")) {
       activeTab.frame.frame.src = "/newpage.html";
     }
     if (url.startsWith("https://www.youtube.com") || url.startsWith("youtube.com") || url === "www.youtube.com") {
@@ -449,7 +449,7 @@ function handleSubmit() {
 
   if (!url.startsWith("http") && !url.includes(".")) {
     url = "https://duckduckgo.com/?q=" + encodeURIComponent(url);
-  } else if (!url.startsWith("http") && !url.startsWith("petezah://")) {
+  } else if (!url.startsWith("http") && !url.startsWith("novix://")) {
     url = "https://" + url;
   }
 
