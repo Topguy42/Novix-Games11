@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	};
 
 	const themes = {
-		default: { bgColor: "#0A1D37", textColor: "#FFFFFF" },
+		default: { bgColor: "#5a3535", textColor: "#FFFFFF" },
 		"swampy-green": { bgColor: "#1A3C34", textColor: "#D4E4D9" },
 		"royal-purple": { bgColor: "#2A1A3C", textColor: "#E2D4E9" },
 		"blood-red": { bgColor: "#3C0A1A", textColor: "#E9D4D4" },

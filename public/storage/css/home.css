@@ -6,7 +6,7 @@
         align-items: flex-start;
         height: 100vh;
         margin: 0;
-        background-color: #5a3535 !important;
+        background-color: #6b5555 !important;
         color: white;
         font-family: "Poppins", sans-serif;
         padding: 20px 0;
@@ -21,19 +21,19 @@
         height: 550px;
         --stripes: repeating-linear-gradient(
           100deg,
-          rgba(80, 20, 20, 0.8) 0%,
-          rgba(80, 20, 20, 0.8) 7%,
+          rgba(95, 80, 80, 0.8) 0%,
+          rgba(95, 80, 80, 0.8) 7%,
           transparent 10%,
           transparent 12%,
-          rgba(80, 20, 20, 0.8) 16%
+          rgba(95, 80, 80, 0.8) 16%
         );
         --rays: repeating-linear-gradient(
           100deg,
-          rgba(100, 30, 30, 0.9) 10%,
-          rgba(80, 20, 20, 0.9) 15%,
-          rgba(100, 30, 30, 0.9) 20%,
-          rgba(80, 20, 20, 0.9) 25%,
-          rgba(100, 30, 30, 0.9) 30%
+          rgba(110, 90, 90, 0.9) 10%,
+          rgba(95, 80, 80, 0.9) 15%,
+          rgba(110, 90, 90, 0.9) 20%,
+          rgba(95, 80, 80, 0.9) 25%,
+          rgba(110, 90, 90, 0.9) 30%
         );
         background-image: var(--stripes), var(--rays);
         background-size: 300%, 200%;
@@ -256,7 +256,7 @@
       .shiny-btn:hover {
         background-color: #a01829;
         transform: scale(1.05);
-        box-shadow: 0 5px 12px rgba(37, 99, 235, 0.4);
+        box-shadow: 0 5px 12px rgba(255, 0, 0, 0.4);
       }
 
       .shiny-btn span {

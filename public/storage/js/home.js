@@ -197,7 +197,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const css = document.createElement("style");
       css.type = "text/css";
       css.innerHTML =
-        ".typewrite > .wrap { border-right: 0.06em solid #0096FF}";
+        ".typewrite > .wrap { border-right: 0.06em solid #ff0000}";
       document.body.appendChild(css);
     });
 
