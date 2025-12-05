@@ -2,19 +2,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 :root {
-  --bg: linear-gradient(135deg, #0a111d 0%, #1a1f2e 50%, #0f1419 100%);
-  --secondary-bg: linear-gradient(135deg, #2b384d 0%, #3c4a5d 100%);
-  --third-bg: linear-gradient(135deg, #444f60 0%, #5a6a7a 100%);
-  --fourth-bg: linear-gradient(135deg, #1e2a3a 0%, #2a3744 100%);
-  --primary: #a4b8db;
-  --secondary: #7d93ba;
-  --text-color: #d5dce8;
-  --secondary-text-color: #d5dce8;
+  --bg: linear-gradient(135deg, #1a0a0a 0%, #2a1515 50%, #0f0505 100%);
+  --secondary-bg: linear-gradient(135deg, #3c2a2a 0%, #4a3a3a 100%);
+  --third-bg: linear-gradient(135deg, #5a4a4a 0%, #6a5a5a 100%);
+  --fourth-bg: linear-gradient(135deg, #2a1515 0%, #3a2727 100%);
+  --primary: #ff8888;
+  --secondary: #ff6b6b;
+  --text-color: #ffd0d0;
+  --secondary-text-color: #ffd0d0;
   --button-bg: var(--fourth-bg);
-  --button-hover: linear-gradient(135deg, #3c4a5d 0%, #4d5a6d 100%);
-  --active-blue: linear-gradient(135deg, #1e2a5a 0%, #1e3a8a 100%);
-  --hover-blue: linear-gradient(135deg, #1e293b 0%, #1e3a8a 100%);
-  --border-color: rgba(59, 130, 246, 0.5);
+  --button-hover: linear-gradient(135deg, #4a3a3a 0%, #5a4a4a 100%);
+  --active-blue: linear-gradient(135deg, #5a1a1a 0%, #8a2a2a 100%);
+  --hover-blue: linear-gradient(135deg, #3a1515 0%, #8a2a2a 100%);
+  --border-color: rgba(255, 107, 107, 0.5);
 }
 
 * {
@@ -56,13 +56,13 @@ img {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+  background: linear-gradient(135deg, #8a2a2a 0%, #8a1a1a 100%);
 }
 
 .badge {
   text-transform: uppercase;
   font-size: 12px;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.3));
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.3), rgba(255, 68, 68, 0.3));
   border-radius: 5px;
   opacity: 0.8;
   padding: 1px 3px;
@@ -72,8 +72,8 @@ img {
 .redbadge {
   text-transform: uppercase;
   font-size: 12px;
-  color: #e54848;
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(220, 38, 38, 0.3));
+  color: #ff4444;
+  background: linear-gradient(135deg, rgba(255, 68, 68, 0.3), rgba(220, 38, 38, 0.3));
   border-radius: 5px;
   opacity: 0.8;
   padding: 1px 3px;
@@ -119,13 +119,13 @@ img {
 
 @keyframes glow {
   0% {
-    box-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
   }
   50% {
-    box-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
   }
   100% {
-    box-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
   }
 }
 
@@ -140,7 +140,7 @@ img {
 .browser-container {
   width: 100%;
   height: 100%;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 208, 208, 0.9);
   display: flex;
   flex-direction: column;
   padding: 0.5em;
@@ -157,8 +157,8 @@ img {
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-              radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+  background: radial-gradient(circle at 20% 20%, rgba(255, 107, 107, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 80% 80%, rgba(255, 68, 68, 0.1) 0%, transparent 50%);
   pointer-events: none;
   z-index: 1;
 }
@@ -169,7 +169,7 @@ img {
 }
 
 .browser-container a {
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 208, 208, 0.9);
 }
 
 .browser-container input,
@@ -208,7 +208,7 @@ img {
   left: 10px;
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 208, 208, 0.7);
   cursor: pointer;
   padding: 0;
   width: 20px;
@@ -224,7 +224,7 @@ img {
   right: 10px;
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 208, 208, 0.7);
   cursor: pointer;
   padding: 0;
   width: 20px;
@@ -265,7 +265,7 @@ input.bar::selection {
 
 .input_row > label {
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 208, 208, 0.7);
   margin-bottom: 0.5rem;
 }
 
@@ -357,12 +357,12 @@ p {
 }
 
 .tab.active {
-  background: #151a2d;
-  border-bottom: 2px solid #3b82f6;
+  background: #2d1515;
+  border-bottom: 2px solid #ff6b6b;
 }
 
 .tab.pinned {
-  background: linear-gradient(135deg, #2a3744 0%, #3c4a5d 100%);
+  background: linear-gradient(135deg, #3a2727 0%, #4a3a3a 100%);
 }
 
 .tab-favicon {
@@ -382,13 +382,13 @@ p {
 .tab-status-icons {
   display: flex;
   gap: 0.5rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 208, 208, 0.7);
 }
 
 .tab-close {
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 208, 208, 0.7);
   cursor: pointer;
   padding: 0;
   width: 20px;
@@ -402,7 +402,7 @@ p {
 }
 
 .tab-close:hover {
-  border: 1px solid rgba(239, 68, 68, 0.5);
+  border: 1px solid rgba(255, 68, 68, 0.5);
   color: white;
 }
 
@@ -434,7 +434,7 @@ p {
 
 .tab-info-box .info-url {
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 208, 208, 0.7);
 }
 
 .tab:hover .tab-info-box {
@@ -506,7 +506,7 @@ p {
 
 .cfg::backdrop {
   backdrop-filter: blur(12px);
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(30, 42, 58, 0.6) 100%);
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(42, 21, 21, 0.6) 100%);
 }
 
 .cfg h2 {
@@ -555,7 +555,7 @@ p {
 }
 
 .input_row input:focus {
-  border-color: #3b82f6;
+  border-color: #ff6b6b;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
@@ -665,12 +665,12 @@ p {
 
 .history-modal::backdrop {
   backdrop-filter: blur(12px);
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(30, 42, 58, 0.6) 100%);
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(42, 21, 21, 0.6) 100%);
 }
 
 .history-item {
   padding: 0.5rem;
-  border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+  border-bottom: 1px solid rgba(255, 107, 107, 0.2);
   cursor: pointer;
 }
 
@@ -756,7 +756,7 @@ p {
   gap: 0.5rem;
   padding: 0.5rem 1rem;
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 208, 208, 0.7);
 }
 
 .search-title img {
@@ -789,7 +789,7 @@ p {
 
 .search-results div i {
   font-size: 1.1rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 208, 208, 0.7);
 }
 
 .suggestion-text {
@@ -845,6 +845,6 @@ p {
 }
 
 .secure-icon .fa-circle.active {
-  color: #00ff00;
+  color: #ff0000;
   animation: glow 1.5s infinite;
 }

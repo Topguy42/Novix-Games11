@@ -6,7 +6,7 @@
     }
 
     body {
-        background-color: #0A1D37;
+        background-color: #3d0a0a;
         color: #FFFFFF;
         display: flex;
         justify-content: center;
@@ -32,8 +32,8 @@
         left: 0;
         width: 100%;
         height: 550px;
-        --stripes: repeating-linear-gradient(100deg, rgba(20, 40, 60, 0.8) 0%, rgba(20, 40, 60, 0.8) 7%, transparent 10%, transparent 12%, rgba(20, 40, 60, 0.8) 16%);
-        --rays: repeating-linear-gradient(100deg, rgba(30, 50, 90, 0.9) 10%, rgba(20, 40, 80, 0.9) 15%, rgba(30, 50, 90, 0.9) 20%, rgba(20, 40, 80, 0.9) 25%, rgba(30, 50, 90, 0.9) 30%);
+        --stripes: repeating-linear-gradient(100deg, rgba(80, 20, 20, 0.8) 0%, rgba(80, 20, 20, 0.8) 7%, transparent 10%, transparent 12%, rgba(80, 20, 20, 0.8) 16%);
+        --rays: repeating-linear-gradient(100deg, rgba(100, 30, 30, 0.9) 10%, rgba(80, 20, 20, 0.9) 15%, rgba(100, 30, 30, 0.9) 20%, rgba(80, 20, 20, 0.9) 25%, rgba(100, 30, 30, 0.9) 30%);
         background-image: var(--stripes), var(--rays);
         background-size: 300%, 200%;
         background-position: 50% 50%, 50% 50%;
@@ -66,8 +66,8 @@
     }
 
     .settings-container {
-        background: linear-gradient(145deg, rgba(15, 30, 55, 0.95), rgba(20, 45, 75, 0.95));
-        border: 2px solid #08152A;
+        background: linear-gradient(145deg, rgba(61, 15, 15, 0.95), rgba(80, 30, 30, 0.95));
+        border: 2px solid #3d0a0a;
         border-radius: 20px;
         width: 95vw;
         max-width: 1800px;
@@ -89,7 +89,7 @@
         left: -2px;
         right: -2px;
         bottom: -2px;
-        border: 1px solid #0A1D37;
+        border: 1px solid #3d0a0a;
         border-radius: 22px;
         pointer-events: none;
         z-index: -1;
@@ -102,7 +102,7 @@
         font-size: 2.5rem;
         font-weight: 700;
         color: #FFFFFF;
-        text-shadow: 0 3px 8px rgba(60, 91, 142, 0.7), 0 0 15px rgba(255, 255, 255, 0.2);
+        text-shadow: 0 3px 8px rgba(196, 30, 58, 0.7), 0 0 15px rgba(255, 255, 255, 0.2);
         letter-spacing: 1px;
     }
 
@@ -111,16 +111,16 @@
         flex-direction: column;
         gap: 10px;
         padding: 15px;
-        background: rgba(20, 40, 70, 0.15);
-        border: 2px solid #08152A;
+        background: rgba(80, 30, 30, 0.15);
+        border: 2px solid #3d0a0a;
         border-radius: 15px;
         box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.4);
     }
 
     .tab {
         padding: 12px 18px;
-        background: linear-gradient(90deg, #1A3559, #2A4366);
-        border: 1px solid #0A1D37;
+        background: linear-gradient(90deg, #5a1a2a, #6a2a3a);
+        border: 1px solid #3d0a0a;
         border-radius: 12px;
         cursor: pointer;
         font-weight: 500;
@@ -148,7 +148,7 @@
     }
 
     .tab:hover, .tab.active {
-        background: linear-gradient(90deg, #3C5B8E, #4A6FA5);
+        background: linear-gradient(90deg, #c41e3a, #d63a52);
         transform: translateX(5px);
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
     }
@@ -156,8 +156,8 @@
     .content {
         padding: 20px;
         overflow-y: auto;
-        background: rgba(20, 45, 75, 0.25);
-        border: 2px solid #08152A;
+        background: rgba(80, 30, 30, 0.25);
+        border: 2px solid #3d0a0a;
         border-radius: 15px;
         height: 100%;
         transition: all 0.3s ease;
@@ -169,25 +169,25 @@
     }
 
     .content::-webkit-scrollbar-track {
-        background: rgba(15, 40, 71, 0.4);
+        background: rgba(61, 15, 15, 0.4);
         border-radius: 5px;
     }
 
     .content::-webkit-scrollbar-thumb {
-        background: linear-gradient(180deg, #4A6FA5, #3C5B8E);
+        background: linear-gradient(180deg, #d63a52, #c41e3a);
         border-radius: 5px;
-        border: 1px solid #0A1D37;
+        border: 1px solid #3d0a0a;
     }
 
     .content::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(180deg, #5C83BA, #4A6FA5);
+        background: linear-gradient(180deg, #e8525f, #d63a52);
     }
 
     .section {
         display: none;
         padding: 25px;
-        background: rgba(15, 40, 71, 0.75);
-        border: 2px solid #08152A;
+        background: rgba(61, 15, 15, 0.75);
+        border: 2px solid #3d0a0a;
         border-radius: 12px;
         animation: fadeIn 0.4s ease;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
@@ -207,7 +207,7 @@
 
     p {
         font-size: 1.15rem;
-        color: #B0C2D4;
+        color: #f0c0c0;
         margin-bottom: 25px;
         line-height: 1.7;
     }
@@ -226,9 +226,9 @@
         width: 100%;
         padding: 14px 16px;
         margin-bottom: 22px;
-        border: 1px solid #0A1D37;
+        border: 1px solid #3d0a0a;
         border-radius: 8px;
-        background: rgba(30, 60, 100, 0.9);
+        background: rgba(61, 30, 30, 0.9);
         color: #FFFFFF;
         transition: all 0.3s ease;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
@@ -238,7 +238,7 @@
     input[type="file"]:focus,
     input[type="color"]:focus,
     select:focus {
-        background: rgba(40, 80, 130, 0.9);
+        background: rgba(80, 40, 40, 0.9);
         transform: scale(1.02);
         outline: none;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
@@ -268,16 +268,16 @@
         width: 22px;
         height: 22px;
         border-radius: 6px;
-        background: rgba(30, 60, 100, 0.9);
+        background: rgba(61, 30, 30, 0.9);
         cursor: pointer;
         position: relative;
         transition: all 0.3s ease;
-        border: 1px solid #0A1D37;
+        border: 1px solid #3d0a0a;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     }
 
     input[type="checkbox"]:checked {
-        background: linear-gradient(135deg, #3C5B8E, #4A6FA5);
+        background: linear-gradient(135deg, #c41e3a, #d63a52);
     }
 
     input[type="checkbox"]:checked::after {
@@ -293,8 +293,8 @@
     button {
         width: 100%;
         padding: 16px;
-        background: linear-gradient(90deg, #3C5B8E, #4A6FA5);
-        border: 1px solid #0A1D37;
+        background: linear-gradient(90deg, #c41e3a, #d63a52);
+        border: 1px solid #3d0a0a;
         border-radius: 8px;
         color: #FFFFFF;
         font-weight: 500;
@@ -302,7 +302,7 @@
         position: relative;
         overflow: hidden;
         transition: all 0.4s ease;
-        box-shadow: 0 4px 15px rgba(60, 91, 142, 0.4);
+        box-shadow: 0 4px 15px rgba(196, 30, 58, 0.4);
     }
 
     button::before {
@@ -321,9 +321,9 @@
     }
 
     button:hover {
-        background: linear-gradient(90deg, #2A3C5F, #3C5B8E);
+        background: linear-gradient(90deg, #a01829, #c41e3a);
         transform: translateY(-3px) scale(1.02);
-        box-shadow: 0 6px 20px rgba(60, 91, 142, 0.6);
+        box-shadow: 0 6px 20px rgba(196, 30, 58, 0.6);
     }
     .save-button {
         background: linear-gradient(90deg, #52C242, #00C254);
@@ -353,13 +353,13 @@
     }
 
     .about-blank-button {
-        background: linear-gradient(90deg, #2A6F97, #4096C1);
-        border: 1px solid #1A3D5C;
+        background: linear-gradient(90deg, #8b2a4a, #c41e3a);
+        border: 1px solid #5a1a2a;
         margin-top: 20px;
     }
 
     .about-blank-button:hover {
-        background: linear-gradient(90deg, #1E506F, #2A6F97);
+        background: linear-gradient(90deg, #6a1a3a, #8b2a4a);
     }
 
     .legal-tabs {
@@ -370,8 +370,8 @@
 
     .legal-tab {
         padding: 10px 25px;
-        background: linear-gradient(90deg, #1A3559, #2A4366);
-        border: 1px solid #0A1D37;
+        background: linear-gradient(90deg, #5a1a2a, #6a2a3a);
+        border: 1px solid #3d0a0a;
         border-radius: 8px;
         cursor: pointer;
         color: #FFFFFF;
@@ -397,7 +397,7 @@
     }
 
     .legal-tab:hover, .legal-tab.active {
-        background: linear-gradient(90deg, #3C5B8E, #4A6FA5);
+        background: linear-gradient(90deg, #c41e3a, #d63a52);
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     }
@@ -460,8 +460,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: rgba(20, 45, 75, 0.5);
-    border: 2px solid #08152A;
+    background: rgba(80, 30, 30, 0.5);
+    border: 2px solid #3d0a0a;
     border-radius: 12px;
     padding: 10px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -477,7 +477,7 @@
     width: 100px; 
     height: 100px; 
     border-radius: 50%; 
-    border: 2px solid #08152A;
+    border: 2px solid #3d0a0a;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
     object-fit: cover;
     margin-bottom: 10px;
@@ -495,9 +495,9 @@ input[type="file"] {
     width: 100%;
     padding: 14px 16px;
     margin-bottom: 22px;
-    border: 1px solid #0A1D37;
+    border: 1px solid #3d0a0a;
     border-radius: 8px;
-    background: rgba(30, 60, 100, 0.9);
+    background: rgba(61, 30, 30, 0.9);
     color: #FFFFFF;
     transition: all 0.3s ease;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
@@ -505,8 +505,8 @@ input[type="file"] {
 
 input[type="file"]::-webkit-file-upload-button,
 input[type="file"]::file-selector-button {
-    background: linear-gradient(90deg, #3C5B8E, #4A6FA5);
-    border: 1px solid #0A1D37;
+    background: linear-gradient(90deg, #c41e3a, #d63a52);
+    border: 1px solid #3d0a0a;
     border-radius: 6px;
     padding: 8px 16px;
     color: #FFFFFF;
@@ -518,15 +518,15 @@ input[type="file"]::file-selector-button {
 
 input[type="file"]::-webkit-file-upload-button:hover,
 input[type="file"]::file-selector-button:hover {
-    background: linear-gradient(90deg, #2A3C5F, #3C5B8E);
+    background: linear-gradient(90deg, #a01829, #c41e3a);
     transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(60, 91, 142, 0.6);
+    box-shadow: 0 4px 10px rgba(196, 30, 58, 0.6);
 }
 
 input[type="file"]:focus::-webkit-file-upload-button,
 input[type="file"]:focus::file-selector-button {
     outline: none;
-    background: linear-gradient(90deg, #4A6FA5, #5C83BA);
+    background: linear-gradient(90deg, #d63a52, #e8525f);
 }
 
 input[type="file"] {
