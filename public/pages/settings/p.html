@@ -10,10 +10,9 @@
   <meta name="keywords" content="Proxy, Unblocker, Novix Unblocker, Novix Games, Novix">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script type='text/javascript' src='//pl27983175.effectivegatecpm.com/c1/07/27/c10727dadb32856a5f427df5cc7f44ab.js'></script>
   <style>
-    body { background: #0A1D37; min-height: 100vh; display: flex; justify-content: center; align-items: center; font-family: 'Roboto', sans-serif; color: #fff; margin: 0; padding: 1rem; }
-    .main-card { background: linear-gradient(135deg, #111117, #182129); border-radius: 24px; width: 100%; max-width: 440px; height: 500px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 12px 25px rgba(0,0,0,0.7); border: 1px solid #3a4a5a; }
+    body { background: linear-gradient(135deg, #1a0a0a 0%, #2a1515 50%, #0f0505 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; font-family: 'Roboto', sans-serif; color: #ffd0d0; margin: 0; padding: 1rem; }
+    .main-card { background: linear-gradient(135deg, #2a1515, #3a2727); border-radius: 24px; width: 100%; max-width: 440px; height: 500px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 12px 25px rgba(0,0,0,0.7); border: 1px solid #8a4a4a; }
     .left-panel { height: 160px; background-image: url('bg_alt.jpeg'); background-size: cover; background-position: center; }
     .right-panel { padding: 2rem; display: flex; flex-direction: column; justify-content: center; }
     .header { text-align: left; margin-bottom: 1rem; }
@@ -21,21 +20,21 @@
     .moon-icon { width: 18px; height: 18px; background: #fff; border-radius: 50%; position: relative; }
     .moon-icon::after { content: ''; position: absolute; top: 3px; right: 3px; width: 12px; height: 12px; background: #1e1e2d; border-radius: 50%; }
     .welcome-title { font-size: 1.75rem; font-weight: 600; margin: 0 0 0.25rem 0; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
-    .welcome-subtitle { color: #99aabb; font-size: 0.9rem; margin: 0 0 1rem 0; }
+    .welcome-subtitle { color: #ffb0b0; font-size: 0.9rem; margin: 0 0 1rem 0; }
     .form-group { margin-bottom: 1rem; }
-    .form-label { display: block; color: #ccddee; font-size: 0.85rem; margin-bottom: 0.25rem; font-weight: 500; }
-    .form-input { width: 100%; background: transparent; border: none; border-bottom: 1px solid #445566; color: #fff; padding: 0.5rem 0; font-size: 0.95rem; outline: none; transition: border-color 0.3s ease; }
+    .form-label { display: block; color: #ffc0c0; font-size: 0.85rem; margin-bottom: 0.25rem; font-weight: 500; }
+    .form-input { width: 100%; background: transparent; border: none; border-bottom: 1px solid #8a5a5a; color: #fff; padding: 0.5rem 0; font-size: 0.95rem; outline: none; transition: border-color 0.3s ease; }
     .form-input:focus { border-bottom-color: #fff; box-shadow: 0 2px 5px rgba(255,255,255,0.1); }
     .form-input::placeholder { color: #667788; }
     .form-options { display: flex; justify-content: space-between; align-items: center; margin: 1rem 0; font-size: 0.85rem; }
-    .remember-me { display: flex; align-items: center; gap: 0.25rem; color: #ccddee; }
-    .remember-me input { width: 16px; height: 16px; appearance: none; background: #334455; border: 2px solid #556677; border-radius: 50%; cursor: pointer; position: relative; }
-    .remember-me input:checked { background: linear-gradient(135deg, #667788, #8899aa); }
+    .remember-me { display: flex; align-items: center; gap: 0.25rem; color: #ffc0c0; }
+    .remember-me input { width: 16px; height: 16px; appearance: none; background: #5a3a3a; border: 2px solid #8a5a5a; border-radius: 50%; cursor: pointer; position: relative; }
+    .remember-me input:checked { background: linear-gradient(135deg, #ff8888, #ff6b6b); }
     .remember-me input:checked::after { content: '✔'; color: #fff; font-size: 0.9rem; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
-    .signup-link { color: #ccddee; text-decoration: none; transition: color 0.3s ease; }
+    .signup-link { color: #ffc0c0; text-decoration: none; transition: color 0.3s ease; }
     .signup-link:hover { color: #fff; }
-    .sign-in-btn { width: 100%; background: linear-gradient(135deg, #fff, #f0f0f0); color: #0A1D37; border: none; padding: 0.75rem; border-radius: 16px; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease; margin-bottom: 0.75rem; }
-    .sign-in-btn:hover { background: linear-gradient(135deg, #f0f0f0, #ddd); transform: translateY(-2px) scale(1.02); box-shadow: 0 5px 15px rgba(255,255,255,0.3); }
+    .sign-in-btn { width: 100%; background: linear-gradient(135deg, #ff8888, #ff6b6b); color: #fff; border: none; padding: 0.75rem; border-radius: 16px; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease; margin-bottom: 0.75rem; }
+    .sign-in-btn:hover { background: linear-gradient(135deg, #ff6b6b, #ff5555); transform: translateY(-2px) scale(1.02); box-shadow: 0 5px 15px rgba(255, 136, 136, 0.3); }
     .sign-in-btn:disabled { opacity: 0.6; cursor: not-allowed; }
     @media (max-width: 768px) { .main-card { max-width: 400px; height: 480px; } .left-panel { height: 140px; } .right-panel { padding: 1.5rem; } }
   </style>
@@ -46,8 +45,8 @@
         left: 0;
         width: 100%;
         height: 550px;
-        --stripes: repeating-linear-gradient(100deg, rgba(20, 40, 60, 0.8) 0%, rgba(20, 40, 60, 0.8) 7%, transparent 10%, transparent 12%, rgba(20, 40, 60, 0.8) 16%);
-        --rays: repeating-linear-gradient(100deg, rgba(30, 50, 90, 0.9) 10%, rgba(20, 40, 80, 0.9) 15%, rgba(30, 50, 90, 0.9) 20%, rgba(20, 40, 80, 0.9) 25%, rgba(30, 50, 90, 0.9) 30%);
+        --stripes: repeating-linear-gradient(100deg, rgba(42, 21, 21, 0.8) 0%, rgba(42, 21, 21, 0.8) 7%, transparent 10%, transparent 12%, rgba(42, 21, 21, 0.8) 16%);
+        --rays: repeating-linear-gradient(100deg, rgba(74, 30, 30, 0.9) 10%, rgba(60, 25, 25, 0.9) 15%, rgba(74, 30, 30, 0.9) 20%, rgba(60, 25, 25, 0.9) 25%, rgba(74, 30, 30, 0.9) 30%);
         background-image: var(--stripes), var(--rays);
         background-size: 300%, 200%;
         background-position: 50% 50%, 50% 50%;
