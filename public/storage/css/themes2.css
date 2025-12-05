@@ -1,4 +1,9 @@
 /* I added this cause I was getting weird bugs with default on main page and this seemed like the simplest fix */
+body {
+	background-color: #3d0a0a;
+	color: #ffdddd;
+}
+
 body.theme-default {
 	background-color: #3d0a0a;
 	color: #ffdddd;
