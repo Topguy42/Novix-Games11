@@ -36,11 +36,28 @@ export async function signupHandler(req, res) {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(userId, email, passwordHash, now, now, isAdmin ? 1 : 0, 1, school || null, age || null, ip);
 
-    res.status(201).json({ 
-      message: isFirstUser 
-        ? 'Admin account created and verified automatically!' 
-        : 'Account created successfully! You can now log in.'
-    });
+    if (isFirstUser) {
+      req.session.user = {
+        id: userId,
+        email: email,
+        username: null,
+        bio: null,
+        avatar_url: null
+      };
+      req.session.save((err) => {
+        if (err) {
+          console.error('Session save error:', err);
+          return res.status(500).json({ error: 'Internal server error' });
+        }
+        res.status(201).json({
+          message: 'Admin account created and verified automatically!'
+        });
+      });
+    } else {
+      res.status(201).json({
+        message: 'Account created successfully! You can now log in.'
+      });
+    }
   } catch (error) {
     console.error('Signup error:', error);
     res.status(500).json({ error: 'Internal server error' });

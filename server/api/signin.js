@@ -40,7 +40,13 @@ export async function signinHandler(req, res) {
       avatar_url: user.avatar_url
     };
 
-    res.status(200).json({ user: req.session.user, message: 'Signin successful' });
+    req.session.save((err) => {
+      if (err) {
+        console.error('Session save error:', err);
+        return res.status(500).json({ error: 'Internal server error' });
+      }
+      res.status(200).json({ user: req.session.user, message: 'Signin successful' });
+    });
   } catch (error) {
     console.error('Signin error:', error);
     res.status(500).json({ error: 'Internal server error' });

@@ -28,7 +28,7 @@ import cors from "cors";
 import fetch from "node-fetch";
 import fs from 'fs';
 import cookieParser from "cookie-parser";
-import rateLimit from "express-rate-limit";
+import rateLimit, { ipKeyGenerator } from "express-rate-limit";
 import { createProxyMiddleware } from "http-proxy-middleware";
 import net from "node:net";
 import cluster from "node:cluster";
@@ -121,7 +121,17 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload());
-app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false, cookie: { secure: false } }));
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false,
+    httpOnly: true,
+    sameSite: 'Lax',
+    maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+  }
+}));
 
 app.use(
   "/api/gn-math/covers",
@@ -181,7 +191,7 @@ app.post("/api/signup", signupLimiter, signupHandler);
 const pfpLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
   max: 5, // 5 uploads per user per hour
-  keyGenerator: req => req.session.user?.id || req.ip,
+  keyGenerator: req => req.session.user?.id || ipKeyGenerator(req),
   message: "Too many profile picture uploads, try again later."
 });
 app.post("/api/upload-profile-pic", pfpLimiter, (req, res) => {
