@@ -6,7 +6,7 @@
         align-items: flex-start;
         height: 100vh;
         margin: 0;
-        background-color: #0a1d37;
+        background-color: #3d0a0a;
         color: white;
         font-family: "Poppins", sans-serif;
         padding: 20px 0;
@@ -21,19 +21,19 @@
         height: 550px;
         --stripes: repeating-linear-gradient(
           100deg,
-          rgba(20, 40, 60, 0.8) 0%,
-          rgba(20, 40, 60, 0.8) 7%,
+          rgba(80, 20, 20, 0.8) 0%,
+          rgba(80, 20, 20, 0.8) 7%,
           transparent 10%,
           transparent 12%,
-          rgba(20, 40, 60, 0.8) 16%
+          rgba(80, 20, 20, 0.8) 16%
         );
         --rays: repeating-linear-gradient(
           100deg,
-          rgba(30, 50, 90, 0.9) 10%,
-          rgba(20, 40, 80, 0.9) 15%,
-          rgba(30, 50, 90, 0.9) 20%,
-          rgba(20, 40, 80, 0.9) 25%,
-          rgba(30, 50, 90, 0.9) 30%
+          rgba(100, 30, 30, 0.9) 10%,
+          rgba(80, 20, 20, 0.9) 15%,
+          rgba(100, 30, 30, 0.9) 20%,
+          rgba(80, 20, 20, 0.9) 25%,
+          rgba(100, 30, 30, 0.9) 30%
         );
         background-image: var(--stripes), var(--rays);
         background-size: 300%, 200%;
@@ -71,7 +71,7 @@
         color: #ffffff;
         text-transform: uppercase;
         letter-spacing: 1px;
-        text-shadow: 0px 4px 10px rgba(255, 255, 255, 0.15);
+        text-shadow: 0px 4px 10px rgba(255, 200, 200, 0.15);
         width: 100%;
         text-align: center;
       }
@@ -83,12 +83,12 @@
         width: 60%;
         max-width: 800px;
         border-radius: 12px;
-        background-color: #0a1d37;
+        background-color: #3d0a0a;
         padding: 14px;
         position: relative;
-        box-shadow: 0 12px 35px rgba(255, 255, 255, 0.2);
+        box-shadow: 0 12px 35px rgba(255, 107, 107, 0.2);
         margin: 0 auto;
-        border: 2px solid #ffffff;
+        border: 2px solid #ff6b6b;
       }
 
       .carousel-container {
@@ -118,7 +118,7 @@
       .carousel-item:hover {
         transform: scale(1.05);
         z-index: 2;
-        box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3);
       }
 
       .image {
@@ -134,7 +134,7 @@
         bottom: 0;
         left: 0;
         right: 0;
-        background: linear-gradient(transparent, rgba(10, 29, 55, 0.8));
+        background: linear-gradient(transparent, rgba(61, 10, 10, 0.8));
         color: white;
         padding: 6px 0;
         border-radius: 0 0 8px 8px;
@@ -142,7 +142,7 @@
         font-size: 12px;
         font-weight: 600;
         letter-spacing: 0.5px;
-        box-shadow: 0 3px 8px rgba(255, 255, 255, 0.1);
+        box-shadow: 0 3px 8px rgba(255, 107, 107, 0.1);
         opacity: 0;
         transition: opacity 0.3s ease-in-out;
       }
@@ -155,7 +155,7 @@
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
-        background: rgba(10, 29, 55, 0.7);
+        background: rgba(61, 10, 10, 0.7);
         border: none;
         color: white;
         width: 40px;
@@ -170,7 +170,7 @@
       }
 
       .carousel-btn:hover {
-        background: rgba(10, 29, 55, 0.9);
+        background: rgba(61, 10, 10, 0.9);
         transform: translateY(-50%) scale(1.1);
       }
 
@@ -193,13 +193,13 @@
         width: 8px;
         height: 8px;
         border-radius: 50%;
-        background: rgba(255, 255, 255, 0.3);
+        background: rgba(255, 107, 107, 0.3);
         cursor: pointer;
         transition: all 0.3s ease;
       }
 
       .carousel-dot.active {
-        background: white;
+        background: #ff6b6b;
         transform: scale(1.2);
       }
 
@@ -219,13 +219,13 @@
         font-weight: 700;
         margin-bottom: 10px;
         color: #ffffff;
-        text-shadow: 0px 4px 10px rgba(255, 255, 255, 0.2);
+        text-shadow: 0px 4px 10px rgba(255, 107, 107, 0.2);
       }
 
       .welcome-section p {
         font-size: 18px;
         font-weight: 400;
-        color: #dcdcdc;
+        color: #f0d0d0;
         margin-bottom: 20px;
       }
 
@@ -243,7 +243,7 @@
         align-items: center;
         cursor: pointer;
         text-transform: uppercase;
-        background-color: #3c5b8e;
+        background-color: #c41e3a;
         border-radius: 10px;
         color: #fff;
         font-weight: 400;
@@ -254,9 +254,9 @@
       }
 
       .shiny-btn:hover {
-        background-color: #2a3c5f;
+        background-color: #a01829;
         transform: scale(1.05);
-        box-shadow: 0 5px 12px rgba(255, 255, 255, 0.4);
+        box-shadow: 0 5px 12px rgba(255, 107, 107, 0.4);
       }
 
       .shiny-btn span {
@@ -364,15 +364,15 @@
       .large-image {
         height: 200px;
         width: auto;
-        border: 5px solid #ffffff;
+        border: 5px solid #ff6b6b;
         border-radius: 12px;
-        box-shadow: 0 12px 35px rgba(255, 255, 255, 0.3);
+        box-shadow: 0 12px 35px rgba(255, 107, 107, 0.3);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
       }
 
       .large-image:hover {
         transform: scale(1.1);
-        box-shadow: 0 15px 40px rgba(255, 255, 255, 0.6);
+        box-shadow: 0 15px 40px rgba(255, 107, 107, 0.6);
       }
 
       .large-image-caption {
@@ -380,7 +380,7 @@
         color: #fff;
         font-weight: 600;
         font-size: 18px;
-        background: rgba(10, 29, 55, 0.8);
+        background: rgba(61, 10, 10, 0.8);
         padding: 8px;
         border-radius: 8px;
       }
@@ -399,7 +399,7 @@
       }
 
       .popup-content {
-        background-color: #1e1e2d;
+        background-color: #1e0a0a;
         padding: 20px;
         border-radius: 10px;
         width: 300px;
@@ -451,11 +451,11 @@
         position: fixed;
         bottom: 20px;
         left: 20px;
-        background-color: #1e1e2d;
+        background-color: #1e0a0a;
         color: white;
         padding: 8px 12px;
         border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+        box-shadow: 0 4px 12px rgba(255, 107, 107, 0.2);
         z-index: 999;
         font-size: 12px;
         width: 103px;
@@ -479,7 +479,7 @@
 
       .discord-btn-two {
         display: block;
-        background-color: #3c5b8e;
+        background-color: #c41e3a;
         padding: 6px;
         color: white;
         text-decoration: none;
@@ -491,7 +491,7 @@
       }
 
       .discord-btn-two:hover {
-        background-color: #5b6e8e;
+        background-color: #d63a52;
       }
 
       .battery-container {
@@ -569,7 +569,7 @@
       }
 
       .social-media-icon-container {
-        background-color: #112c69;
+        background-color: #8b1538;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -582,7 +582,7 @@
       }
 
       .social-media-icon-container-2 {
-        background-color: #112c69;
+        background-color: #8b1538;
         display: flex;
         justify-content: center;
         align-items: center;

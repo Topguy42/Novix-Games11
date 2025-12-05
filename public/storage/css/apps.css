@@ -5,7 +5,7 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #0A1D37;
+    background-color: #3d0a0a;
     color: white;
     font-family: 'Poppins', sans-serif;
     padding: 0;
@@ -22,8 +22,8 @@ body::-webkit-scrollbar {
     left: 0;
     width: 100%;
     height: 550px;
-    --stripes: repeating-linear-gradient(100deg, rgba(20, 40, 60, 0.8) 0%, rgba(20, 40, 60, 0.8) 7%, transparent 10%, transparent 12%, rgba(20, 40, 60, 0.8) 16%);
-    --rays: repeating-linear-gradient(100deg, rgba(30, 50, 90, 0.9) 10%, rgba(20, 40, 80, 0.9) 15%, rgba(30, 50, 90, 0.9) 20%, rgba(20, 40, 80, 0.9) 25%, rgba(30, 50, 90, 0.9) 30%);
+    --stripes: repeating-linear-gradient(100deg, rgba(80, 20, 20, 0.8) 0%, rgba(80, 20, 20, 0.8) 7%, transparent 10%, transparent 12%, rgba(80, 20, 20, 0.8) 16%);
+    --rays: repeating-linear-gradient(100deg, rgba(100, 30, 30, 0.9) 10%, rgba(80, 20, 20, 0.9) 15%, rgba(100, 30, 30, 0.9) 20%, rgba(80, 20, 20, 0.9) 25%, rgba(100, 30, 30, 0.9) 30%);
     background-image: var(--stripes), var(--rays);
     background-size: 300%, 200%;
     background-position: 50% 50%, 50% 50%;
@@ -50,7 +50,7 @@ body::-webkit-scrollbar {
     top: 0;
     left: 0;
     width: 100%;
-    background-color: #0A1D37;
+    background-color: #3d0a0a;
     padding: 15px 0;
     text-align: center;
     z-index: 1000;
@@ -63,19 +63,19 @@ body::-webkit-scrollbar {
     width: 50vw;
     padding: 12px 20px;
     font-size: 18px;
-    border: 2px solid #fff;
+    border: 2px solid #ff6b6b;
     color: #fff;
-    background: #141414;
+    background: #1a0a0a;
     border-radius: 50px;
     transition: 0.3s;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .search-container input:focus {
-    background: #333;
+    background: #2a0a0a;
     outline: none;
-    box-shadow: 0 0 15px rgba(0, 102, 204, 0.4);
-    border-color: #0066cc;
+    box-shadow: 0 0 15px rgba(255, 107, 107, 0.4);
+    border-color: #ff6b6b;
 }
 
 .game-container {
@@ -95,7 +95,7 @@ body::-webkit-scrollbar {
     transition: transform 0.4s ease, box-shadow 0.4s ease, filter 0.4s ease;
     border-radius: 10px;
     background-color: #222;
-    border: 2px solid #fff;
+    border: 2px solid #ff6b6b;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
 }
 
@@ -377,9 +377,9 @@ body::-webkit-scrollbar {
     left: 20px;
     z-index: 9999;
     padding: 10px 20px;
-    background-color: #141414;
+    background-color: #1a0a0a;
     color: white;
-    border: 1px solid white;
+    border: 1px solid #ff6b6b;
     font-size: 16px;
     cursor: pointer;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -396,31 +396,31 @@ body::-webkit-scrollbar {
     top: 5px;
     right: 20px;
     z-index: 1000;
-    background-color: #141414;
+    background-color: #1a0a0a;
     padding: 10px;
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
 }
 
 .filter-container select {
-    background-color: #222;
+    background-color: #2a0a0a;
     color: white;
     padding: 8px 16px;
     border-radius: 8px;
-    border: 2px solid #fff;
+    border: 2px solid #ff6b6b;
     font-size: 16px;
     cursor: pointer;
     transition: 0.3s;
 }
 
 .filter-container select:hover {
-    background-color: #333;
+    background-color: #3a0a0a;
 }
 
 .ad-container-horizantal {
     width: 100%;
     height: 200px;
-    border: 3px solid red;
-    background-color: #000e24;
+    border: 3px solid #ff0000;
+    background-color: #0a0000;
     z-index: -2;
 }
