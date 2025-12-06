@@ -311,6 +311,16 @@
       } catch (error) {
         console.error('Admin check error:', error);
       }
+      // Fallback check: if session failed but localStorage has user, check if admin
+      if (!isAdmin && localStorage.getItem('loggedInUser')) {
+        try {
+          const user = JSON.parse(localStorage.getItem('loggedInUser'));
+          isAdmin = user.app_metadata?.is_admin || false;
+          if (isAdmin) {
+            document.getElementById('add-btn').style.display = 'flex';
+          }
+        } catch {}
+      }
     }
 
     async function loadChangelog() {
