@@ -127,7 +127,79 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload());
+
+// Create SQLite session store
+const sessionDb = new sqlite3(path.join(__dirname, 'data', 'sessions.db'));
+sessionDb.exec(`
+  CREATE TABLE IF NOT EXISTS sessions (
+    sid TEXT PRIMARY KEY,
+    sess TEXT NOT NULL,
+    expire INTEGER NOT NULL
+  );
+  CREATE INDEX IF NOT EXISTS expire_idx ON sessions(expire);
+`);
+
+// Simple SQLite session store
+class SqliteSessionStore extends session.Store {
+  get(sid, callback) {
+    try {
+      const row = sessionDb.prepare('SELECT sess FROM sessions WHERE sid = ? AND expire > ?').get(sid, Date.now());
+      if (row) {
+        callback(null, JSON.parse(row.sess));
+      } else {
+        callback(null, null);
+      }
+    } catch (err) {
+      callback(err);
+    }
+  }
+
+  set(sid, sess, callback) {
+    try {
+      const expire = Date.now() + (sess.cookie?.maxAge || 7 * 24 * 60 * 60 * 1000);
+      sessionDb.prepare('INSERT OR REPLACE INTO sessions (sid, sess, expire) VALUES (?, ?, ?)').run(
+        sid,
+        JSON.stringify(sess),
+        expire
+      );
+      callback(null);
+    } catch (err) {
+      callback(err);
+    }
+  }
+
+  destroy(sid, callback) {
+    try {
+      sessionDb.prepare('DELETE FROM sessions WHERE sid = ?').run(sid);
+      callback(null);
+    } catch (err) {
+      callback(err);
+    }
+  }
+
+  clear(callback) {
+    try {
+      sessionDb.prepare('DELETE FROM sessions').run();
+      callback(null);
+    } catch (err) {
+      callback(err);
+    }
+  }
+}
+
+// Clean up expired sessions periodically
+setInterval(() => {
+  try {
+    sessionDb.prepare('DELETE FROM sessions WHERE expire <= ?').run(Date.now());
+  } catch (err) {
+    console.error('Session cleanup error:', err);
+  }
+}, 60 * 60 * 1000); // Every hour
+
+const store = new SqliteSessionStore();
+
 app.use(session({
+  store: store,
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
