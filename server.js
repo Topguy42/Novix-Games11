@@ -345,6 +345,8 @@ app.post("/api/signout", (req, res) => {
   return res.status(200).json({ message: "Signout successful" });
 });
 app.get("/api/profile", (req, res) => {
+  console.log(`[/api/profile] Session ID: ${req.sessionID}, User in session: ${req.session?.user?.email || 'none'}`);
+  console.log(`[/api/profile] Cookies from client:`, req.cookies);
   if (!req.session.user) {
     return res.status(401).json({ error: "Unauthorized" });
   }
