@@ -454,25 +454,23 @@
       }
     });
 
-    checkAuth();
-    loadFeedback();
-    setTimeout(loadFeedbackLikes, 500);
-
-    // Auto-open feedback modal if redirected from signin
-    window.addEventListener('DOMContentLoaded', () => {
-      const returnTo = localStorage.getItem('returnTo');
-      if (returnTo === '/pages/other/feedback/index.html') {
-        localStorage.removeItem('returnTo');
-        // Wait for auth check to complete
+    // Check if redirected from signin to automatically open modal
+    const returnTo = localStorage.getItem('returnTo');
+    if (returnTo === '/pages/other/feedback/index.html') {
+      localStorage.removeItem('returnTo');
+      checkAuth().then(() => {
+        loadFeedback();
         setTimeout(() => {
-          checkAuth().then(() => {
-            if (isAuthenticated) {
-              document.getElementById('feedback-modal').classList.add('active');
-            }
-          });
-        }, 300);
-      }
-    });
+          if (isAuthenticated) {
+            document.getElementById('feedback-modal').classList.add('active');
+          }
+        }, 500);
+      });
+    } else {
+      checkAuth();
+      loadFeedback();
+    }
+    setTimeout(loadFeedbackLikes, 500);
   </script>
 </body>
 </html>
