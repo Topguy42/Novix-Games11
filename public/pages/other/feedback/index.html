@@ -281,6 +281,10 @@
       } catch (error) {
         isAuthenticated = false;
       }
+      // Fallback check: if session failed but localStorage has user, trust localStorage
+      if (!isAuthenticated && localStorage.getItem('loggedInUser')) {
+        isAuthenticated = true;
+      }
     }
 
     async function loadFeedback() {
