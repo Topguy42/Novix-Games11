@@ -214,13 +214,15 @@ app.use(session({
 
 // Debug session logging
 app.use((req, res, next) => {
-  const original = res.json.bind(res);
-  res.json = function(data) {
-    if (req.path === '/api/signin' || req.path === '/api/signup') {
+  const originalEnd = res.end.bind(res);
+  res.end = function(...args) {
+    if ((req.path === '/api/signin' || req.path === '/api/signup') && req.method === 'POST') {
+      const headers = res.getHeaders();
       console.log(`[${req.path}] Session ID: ${req.sessionID}, User in session: ${req.session?.user?.email || 'none'}`);
-      console.log(`[${req.path}] Headers being set:`, res.getHeaders());
+      console.log(`[${req.path}] Set-Cookie header:`, headers['set-cookie']);
+      console.log(`[${req.path}] All response headers:`, headers);
     }
-    return original(data);
+    return originalEnd.apply(res, args);
   };
   next();
 });
