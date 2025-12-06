@@ -20,6 +20,7 @@ import sqlite3 from "better-sqlite3";
 import fileUpload from "express-fileupload";
 import { signupHandler } from "./server/api/signup.js";
 import { signinHandler } from "./server/api/signin.js";
+import { signoutHandler } from "./server/api/signout.js";
 import { adminUserActionHandler } from './server/api/admin-user-action.js';
 import { addCommentHandler, getCommentsHandler } from './server/api/comments.js';
 import { likeHandler, getLikesHandler } from './server/api/likes.js';
