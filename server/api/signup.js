@@ -44,29 +44,26 @@ export async function signupHandler(req, res) {
       avatar_url: null
     };
 
-    req.session.save((err) => {
-      if (err) {
-        console.error('Session save error:', err);
-        return res.status(500).json({ error: 'Internal server error' });
-      }
-      console.log(`[SIGNUP] User ${email} created, session ID: ${req.sessionID}`);
-      return res.status(201).json({
-        user: {
-          id: userId,
-          email: email,
-          user_metadata: {
-            name: null,
-            bio: null,
-            avatar_url: null
-          },
-          app_metadata: {
-            provider: 'email',
-            is_admin: isAdmin ? 1 : 0,
-            role: isAdmin ? 'Owner' : 'User'
-          }
+    req.session.touch();
+
+    console.log(`[SIGNUP] User ${email} created, session ID: ${req.sessionID}`);
+    
+    return res.status(201).json({
+      user: {
+        id: userId,
+        email: email,
+        user_metadata: {
+          name: null,
+          bio: null,
+          avatar_url: null
         },
-        message: 'Account created successfully!'
-      });
+        app_metadata: {
+          provider: 'email',
+          is_admin: isAdmin ? 1 : 0,
+          role: isAdmin ? 'Owner' : 'User'
+        }
+      },
+      message: 'Account created successfully!'
     });
   } catch (error) {
     console.error('Signup error:', error);
