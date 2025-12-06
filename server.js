@@ -20,6 +20,7 @@ import sqlite3 from "better-sqlite3";
 import fileUpload from "express-fileupload";
 import { signupHandler } from "./server/api/signup.js";
 import { signinHandler } from "./server/api/signin.js";
+import { signoutHandler } from "./server/api/signout.js";
 import { adminUserActionHandler } from './server/api/admin-user-action.js';
 import { addCommentHandler, getCommentsHandler } from './server/api/comments.js';
 import { likeHandler, getLikesHandler } from './server/api/likes.js';
@@ -120,9 +121,15 @@ app.use("/bare/", apiLimiter);
 app.use("/api/", apiLimiter);
 
 app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'DELETE'],
-  allowedHeaders: ['Content-Type']
+  origin: function(origin, callback) {
+    // Allow all origins
+    callback(null, true);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'DELETE', 'PUT', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
+  exposedHeaders: ['Set-Cookie'],
+  maxAge: 86400
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -162,16 +169,20 @@ class PersistentSessionStore extends session.Store {
     try {
       const sess = this.sessions.get(sid);
       if (sess) {
+        console.log(`[SessionStore.get] Found session in memory: ${sid}`);
         return callback(null, sess);
       }
       const row = sessionDb.prepare('SELECT sess FROM sessions WHERE sid = ? AND expire > ?').get(sid, Date.now());
       if (row) {
         const sess = JSON.parse(row.sess);
         this.sessions.set(sid, sess);
+        console.log(`[SessionStore.get] Found session in database: ${sid}`);
         return callback(null, sess);
       }
+      console.log(`[SessionStore.get] Session not found: ${sid}`);
       callback(null, null);
     } catch (err) {
+      console.error(`[SessionStore.get] Error retrieving session: ${sid}`, err);
       callback(err);
     }
   }
@@ -185,8 +196,10 @@ class PersistentSessionStore extends session.Store {
         JSON.stringify(sess),
         expire
       );
+      console.log(`[SessionStore.set] Saved session: ${sid}, has user: ${sess.user ? 'yes' : 'no'}`);
       callback(null);
     } catch (err) {
+      console.error(`[SessionStore.set] Error saving session: ${sid}`, err);
       callback(err);
     }
   }
@@ -238,6 +251,18 @@ app.use(session({
     path: '/'
   }
 }));
+
+// Debug middleware to log API responses
+app.use('/api/', (req, res, next) => {
+  const originalJson = res.json;
+  res.json = function(data) {
+    console.log(`[API Response] ${req.method} ${req.path} - Status: ${res.statusCode}`);
+    console.log(`[API Response] Headers:`, res.getHeaders());
+    console.log(`[API Response] Session ID: ${req.sessionID}, Has user: ${req.session?.user ? 'yes' : 'no'}`);
+    return originalJson.call(this, data);
+  };
+  next();
+});
 
 app.use(
   "/api/gn-math/covers",
@@ -329,6 +354,7 @@ app.post("/api/upload-profile-pic", pfpLimiter, (req, res) => {
 });
 
 app.post("/api/signin", signinHandler);
+app.post("/api/signout", signoutHandler);
 app.post('/api/admin/user-action', adminUserActionHandler);
 app.post('/api/comment', addCommentHandler);
 app.get('/api/comments', getCommentsHandler);

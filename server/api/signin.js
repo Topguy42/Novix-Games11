@@ -32,7 +32,7 @@ export async function signinHandler(req, res) {
       db.prepare('UPDATE users SET ip = ? WHERE id = ?').run(ip, user.id);
     }
 
-    // Set session user data
+    // Set session user data directly without complex callback
     req.session.user = {
       id: user.id,
       email: user.email,
@@ -41,33 +41,25 @@ export async function signinHandler(req, res) {
       avatar_url: user.avatar_url
     };
 
-    // Regenerate session ID to prevent fixation attacks
-    req.session.regenerate((err) => {
-      if (err) {
-        console.error('Session regenerate error:', err);
-        return res.status(500).json({ error: 'Internal server error' });
-      }
+    // Touch the session to ensure it's marked as modified
+    req.session.touch();
 
-      req.session.user = {
+    console.log(`[SIGNIN] User ${email} logged in, session ID: ${req.sessionID}`);
+    
+    return res.status(200).json({
+      user: {
         id: user.id,
         email: user.email,
-        username: user.username,
-        bio: user.bio,
-        avatar_url: user.avatar_url
-      };
-
-      req.session.save((saveErr) => {
-        if (saveErr) {
-          console.error('Session save error:', saveErr);
-          return res.status(500).json({ error: 'Internal server error' });
+        user_metadata: {
+          name: user.username,
+          bio: user.bio,
+          avatar_url: user.avatar_url
+        },
+        app_metadata: {
+          provider: 'email'
         }
-
-        console.log(`[SIGNIN] User ${email} logged in, session ID: ${req.sessionID}`);
-        return res.status(200).json({
-          user: req.session.user,
-          message: 'Signin successful'
-        });
-      });
+      },
+      message: 'Signin successful'
     });
   } catch (error) {
     console.error('Signin error:', error);
