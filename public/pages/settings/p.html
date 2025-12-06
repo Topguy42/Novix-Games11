@@ -118,18 +118,20 @@
         header.innerHTML = `
           <div class="brand"><div class="moon-icon"></div>Novix OAuth</div>
           <h1 class="welcome-title" style="color: #4ade80; font-size: 1.5rem;">You are logged in!</h1>
-          <p class="welcome-subtitle">Redirecting to your profile...</p>
+          <p class="welcome-subtitle">Redirecting...</p>
         `;
 
-        // Redirect to profile
+        // Redirect to profile or return URL
+        const returnTo = localStorage.getItem('returnTo') || '/pages/settings/p2.html';
+        localStorage.removeItem('returnTo');
         setTimeout(() => {
           if (window.parent !== window) {
             const iframe = window.frameElement;
             if (iframe) {
-              iframe.src = '/pages/settings/p2.html';
+              iframe.src = returnTo;
             }
           } else {
-            window.location.href = '/pages/settings/p2.html';
+            window.location.href = returnTo;
           }
         }, 1500);
       }
@@ -168,18 +170,20 @@
           header.innerHTML = `
             <div class="brand"><div class="moon-icon"></div>Novix OAuth</div>
             <h1 class="welcome-title" style="color: #4ade80; font-size: 1.5rem;">You are logged in!</h1>
-            <p class="welcome-subtitle">Redirecting to your profile...</p>
+            <p class="welcome-subtitle">Redirecting...</p>
           `;
 
+          const returnTo = localStorage.getItem('returnTo') || '/pages/settings/p2.html';
+          localStorage.removeItem('returnTo');
           setTimeout(() => {
             if (window.parent !== window) {
               window.parent.postMessage({ type: 'login_success', user: data.user }, window.location.origin);
               const iframe = window.frameElement;
               if (iframe) {
-                iframe.src = '/pages/settings/p2.html';
+                iframe.src = returnTo;
               }
             } else {
-              window.location.href = '/pages/settings/p2.html';
+              window.location.href = returnTo;
             }
           }, 1500);
         } else {
