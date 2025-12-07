@@ -114,6 +114,34 @@ try {
   console.error('Comments table migration error:', error);
 }
 
+// Migrate likes table to allow nullable user_id
+try {
+  const likesTableInfo = db.prepare("PRAGMA table_info(likes)").all();
+  const userIdColumn = likesTableInfo.find(col => col.name === 'user_id');
+  if (userIdColumn && userIdColumn.notnull === 1) {
+    console.log('Migrating likes table to allow nullable user_id...');
+    db.exec(`
+      BEGIN TRANSACTION;
+      CREATE TABLE likes_new (
+        id TEXT PRIMARY KEY,
+        type TEXT NOT NULL,
+        target_id TEXT NOT NULL,
+        user_id TEXT,
+        created_at INTEGER NOT NULL,
+        UNIQUE(type, target_id, user_id),
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+      );
+      INSERT INTO likes_new SELECT * FROM likes;
+      DROP TABLE likes;
+      ALTER TABLE likes_new RENAME TO likes;
+      COMMIT;
+    `);
+    console.log('Likes table migration completed');
+  }
+} catch (error) {
+  console.error('Likes table migration error:', error);
+}
+
 db.exec(`
 
   CREATE TABLE IF NOT EXISTS changelog (
