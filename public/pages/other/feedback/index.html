@@ -313,7 +313,7 @@
         if (feedback && feedback.length > 0) {
           list.innerHTML = feedback.map(item => {
             const date = new Date(item.created_at);
-            const displayName = item.username || (item.email ? item.email.split('@')[0] : 'Anonymous');
+            const displayName = item.username || item.email?.split('@')[0] || 'Anonymous';
             return `
               <div class="feedback-item">
                 <div class="meta">
