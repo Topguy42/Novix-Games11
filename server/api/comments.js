@@ -2,7 +2,7 @@ import db from '../db.js';
 import { randomUUID } from 'crypto';
 
 export async function addCommentHandler(req, res) {
-  const { type, targetId, content } = req.body || {};
+  const { type, targetId, content, user } = req.body || {};
 
   if (!['changelog','feedback'].includes(type) || !targetId || !content) {
     return res.status(400).json({ error: 'Invalid request' });
@@ -15,26 +15,10 @@ export async function addCommentHandler(req, res) {
 
   try {
     const id = randomUUID();
-    let userId = req.session?.user?.id || null;
+    let userId = req.session?.user?.id || user?.id || null;
     const now = Date.now();
 
-    // Try to find user by email from Authorization header if session fails
-    if (!userId) {
-      const authHeader = req.get('Authorization');
-      if (authHeader && authHeader.startsWith('Bearer ')) {
-        const token = authHeader.substring(7);
-        try {
-          const user = JSON.parse(Buffer.from(token, 'base64').toString());
-          if (user && user.id) {
-            userId = user.id;
-          }
-        } catch (e) {
-          // Invalid token, continue with null userId
-        }
-      }
-    }
-
-    console.log(`[COMMENT] User ID: ${userId}, Session user: ${req.session?.user?.id || 'none'}`);
+    console.log(`[COMMENT] User ID: ${userId}, Content: "${content.substring(0, 50)}..."`);
     db.prepare('INSERT INTO comments (id, type, target_id, user_id, content, created_at) VALUES (?, ?, ?, ?, ?, ?)')
       .run(id, type, targetId, userId, content, now);
     res.status(201).json({ message: 'Comment posted.', id });
