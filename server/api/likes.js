@@ -12,8 +12,13 @@ export async function likeHandler(req, res) {
     const userId = req.session?.user?.id || null;
 
     if (action === 'unlike') {
-      db.prepare('DELETE FROM likes WHERE type = ? AND target_id = ? AND user_id = ?')
-        .run(type, targetId, userId);
+      if (userId) {
+        db.prepare('DELETE FROM likes WHERE type = ? AND target_id = ? AND user_id = ?')
+          .run(type, targetId, userId);
+      } else {
+        db.prepare('DELETE FROM likes WHERE type = ? AND target_id = ? AND user_id IS NULL')
+          .run(type, targetId);
+      }
       res.json({ message: 'Unliked.' });
     } else {
       const id = randomUUID();
