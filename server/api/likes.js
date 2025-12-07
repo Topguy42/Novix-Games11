@@ -9,13 +9,13 @@ export async function likeHandler(req, res) {
   }
 
   try {
-    const userId = req.session?.user?.id;
+    const userId = req.session?.user?.id || null;
+
+    if (!userId) {
+      return res.status(401).json({ error: 'Must be logged in to like' });
+    }
 
     if (action === 'unlike') {
-      if (!userId) {
-        return res.status(401).json({ error: 'Must be logged in to unlike' });
-      }
-
       const existingLike = db.prepare('SELECT id FROM likes WHERE type = ? AND target_id = ? AND user_id = ?')
         .get(type, targetId, userId);
 
@@ -23,15 +23,11 @@ export async function likeHandler(req, res) {
         return res.status(400).json({ error: 'You have not liked this' });
       }
 
-      const changes = db.prepare('DELETE FROM likes WHERE type = ? AND target_id = ? AND user_id = ?')
-        .run(type, targetId, userId).changes;
+      db.prepare('DELETE FROM likes WHERE type = ? AND target_id = ? AND user_id = ?')
+        .run(type, targetId, userId);
 
-      res.json({ message: 'Unliked.', changes });
+      res.json({ message: 'Unliked.' });
     } else {
-      if (!userId) {
-        return res.status(401).json({ error: 'Must be logged in to like' });
-      }
-
       const existingLike = db.prepare('SELECT id FROM likes WHERE type = ? AND target_id = ? AND user_id = ?')
         .get(type, targetId, userId);
 
