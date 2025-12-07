@@ -531,9 +531,6 @@ app.post("/api/changelog", (req, res) => {
   }
 });
 app.post("/api/feedback", (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
   try {
     const { content } = req.body;
     if (!content || content.trim().length === 0) {
@@ -541,7 +538,8 @@ app.post("/api/feedback", (req, res) => {
     }
     const id = randomUUID();
     const now = Date.now();
-    db.prepare('INSERT INTO feedback (id, user_id, content, created_at) VALUES (?, ?, ?, ?)').run(id, req.session.user.id, content.trim(), now);
+    const userId = req.session.user?.id || null;
+    db.prepare('INSERT INTO feedback (id, user_id, content, created_at) VALUES (?, ?, ?, ?)').run(id, userId, content.trim(), now);
     return res.status(201).json({ message: "Feedback submitted", id });
   } catch (error) {
     console.error('Feedback error:', error);
