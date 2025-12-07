@@ -207,9 +207,16 @@ document.addEventListener("DOMContentLoaded", () => {
 	};
 
 	const autocloak = () => {
-		openAboutBlank();
-		window.location.href =
-			localStorage.getItem("panicUrl") || "https://classroom.google.com";
+		// Open a new tab with about:blank
+		window.open("about:blank", "_blank");
+
+		// Clear history by replacing current state multiple times
+		history.replaceState(null, "", "about:blank");
+
+		// Redirect original tab to Google and erase history
+		setTimeout(() => {
+			window.location.replace("https://www.google.com");
+		}, 100);
 	};
 
 	const exportData = () => {
