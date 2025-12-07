@@ -33,8 +33,13 @@ export async function likeHandler(req, res) {
     if (error.message && error.message.includes('UNIQUE')) {
       try {
         const userId = req.session?.user?.id || null;
-        db.prepare('DELETE FROM likes WHERE type = ? AND target_id = ? AND user_id = ?')
-          .run(type, targetId, userId);
+        if (userId) {
+          db.prepare('DELETE FROM likes WHERE type = ? AND target_id = ? AND user_id = ?')
+            .run(type, targetId, userId);
+        } else {
+          db.prepare('DELETE FROM likes WHERE type = ? AND target_id = ? AND user_id IS NULL')
+            .run(type, targetId);
+        }
         res.json({ message: 'Unliked.' });
       } catch (deleteError) {
         console.error('Unlike error:', deleteError);
