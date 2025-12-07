@@ -275,7 +275,19 @@
     let isAuthenticated = false;
 
     async function checkAuth() {
-      // First check localStorage
+      // First check parent window for current user (iframe scenario)
+      try {
+        if (window.parent && window.parent.currentUser) {
+          window.currentUser = window.parent.currentUser;
+          isAuthenticated = true;
+          console.log('Using user from parent window:', window.currentUser.user_metadata?.name || window.currentUser.email);
+          return;
+        }
+      } catch (e) {
+        console.log('Cannot access parent window:', e);
+      }
+
+      // Check localStorage
       const storedUser = localStorage.getItem('currentUser');
       if (storedUser) {
         try {
