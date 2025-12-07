@@ -322,7 +322,7 @@
                 </div>
                 <div class="content">${item.content}</div>
                 <div style="margin-top:12px;display:flex;gap:12px;">
-                  <button class="btn" style="background:#232b36;color:#ef4444;padding:4px 18px;font-size:1em;box-shadow:0 1px 4px rgba(239,68,68,0.04);" onclick="likeFeedback('${item.id}', this)"><i class="fa fa-thumbs-up"></i> <span class="like-count" data-id="${item.id}">0</span></button>
+                  <button class="btn like-btn" data-id="${item.id}" style="background:#232b36;color:#ef4444;padding:4px 18px;font-size:1em;box-shadow:0 1px 4px rgba(239,68,68,0.04);" onclick="likeFeedback('${item.id}', this)"><i class="fa fa-thumbs-up"></i> <span class="like-count" data-id="${item.id}">0</span></button>
                   <button class="btn" style="background:#232b36;padding:4px 18px;font-size:1em;box-shadow:0 1px 4px rgba(139,92,246,0.04);" onclick="openCommentModal('feedback','${item.id}')"><i class="fa fa-comment" style="color:#fff;"></i> <span class="comment-count" data-id="${item.id}">0</span></button>
                 </div>
                 <div class="comments-list" id="comments-feedback-${item.id}" style="margin-top:10px;"></div>
