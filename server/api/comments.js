@@ -29,6 +29,6 @@ export async function addCommentHandler(req, res) {
 export async function getCommentsHandler(req, res) {
   const { type, targetId } = req.query;
   if (!['changelog','feedback'].includes(type) || !targetId) return res.status(400).json({ error: 'Invalid request' });
-  const comments = db.prepare('SELECT c.*, u.username, u.avatar_url FROM comments c LEFT JOIN users u ON c.user_id = u.id WHERE c.type = ? AND c.target_id = ? ORDER BY c.created_at ASC').all(type, targetId);
+  const comments = db.prepare('SELECT c.*, u.username, u.email, u.avatar_url FROM comments c LEFT JOIN users u ON c.user_id = u.id WHERE c.type = ? AND c.target_id = ? ORDER BY c.created_at ASC').all(type, targetId);
   res.json({ comments });
 }
