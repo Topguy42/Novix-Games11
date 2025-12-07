@@ -12,13 +12,15 @@ export async function likeHandler(req, res) {
     const userId = req.session?.user?.id || null;
 
     if (action === 'unlike') {
+      let result;
       if (userId) {
-        db.prepare('DELETE FROM likes WHERE type = ? AND target_id = ? AND user_id = ?')
+        result = db.prepare('DELETE FROM likes WHERE type = ? AND target_id = ? AND user_id = ?')
           .run(type, targetId, userId);
       } else {
-        db.prepare('DELETE FROM likes WHERE type = ? AND target_id = ? AND user_id IS NULL')
+        result = db.prepare('DELETE FROM likes WHERE type = ? AND target_id = ? AND user_id IS NULL')
           .run(type, targetId);
       }
+      console.log('Unlike result:', result);
       res.json({ message: 'Unliked.' });
     } else {
       const id = randomUUID();
@@ -33,13 +35,15 @@ export async function likeHandler(req, res) {
     if (error.message && error.message.includes('UNIQUE')) {
       try {
         const userId = req.session?.user?.id || null;
+        let result;
         if (userId) {
-          db.prepare('DELETE FROM likes WHERE type = ? AND target_id = ? AND user_id = ?')
+          result = db.prepare('DELETE FROM likes WHERE type = ? AND target_id = ? AND user_id = ?')
             .run(type, targetId, userId);
         } else {
-          db.prepare('DELETE FROM likes WHERE type = ? AND target_id = ? AND user_id IS NULL')
+          result = db.prepare('DELETE FROM likes WHERE type = ? AND target_id = ? AND user_id IS NULL')
             .run(type, targetId);
         }
+        console.log('Unlike error recovery result:', result);
         res.json({ message: 'Unliked.' });
       } catch (deleteError) {
         console.error('Unlike error:', deleteError);
