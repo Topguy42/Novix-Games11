@@ -197,7 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		favicon.rel = "icon";
 		favicon.href =
 			localStorage.getItem("siteLogo") ||
-			"/storage/images/logo-png-removebg-preview.png";
+			"https://cdn.builder.io/api/v1/image/assets%2F8d3807a334b94a32a3211ab63c48e46e%2Fa4a3267f3d184d918eaca2fb6d783825?format=webp&width=800";
 		popup.document.head.appendChild(favicon);
 		const iframe = popup.document.createElement("iframe");
 		iframe.src = "/index.html";
@@ -220,7 +220,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		favicon.rel = "icon";
 		favicon.href =
 			localStorage.getItem("siteLogo") ||
-			"/storage/images/logo-png-removebg-preview.png";
+			"https://cdn.builder.io/api/v1/image/assets%2F8d3807a334b94a32a3211ab63c48e46e%2Fa4a3267f3d184d918eaca2fb6d783825?format=webp&width=800";
 		popup.document.head.appendChild(favicon);
 
 		// Inject the site into the popup
